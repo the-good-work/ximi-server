@@ -1,0 +1,7 @@
+.pnpm-debug.log
+caddy.yaml
+caddy_data
+dist
+livekit.yaml
+node_modules
+redis.conf
