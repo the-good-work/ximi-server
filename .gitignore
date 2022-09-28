@@ -5,3 +5,4 @@ dist
 livekit.yaml
 node_modules
 redis.conf
+.env
