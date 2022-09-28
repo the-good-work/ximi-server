@@ -10,6 +10,6 @@ RUN pnpm install --frozen-lockfile --prod
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 CMD [ "npx", "tsc",  "src/app.js" ]
 CMD [ "node",  "dist/app.js" ]

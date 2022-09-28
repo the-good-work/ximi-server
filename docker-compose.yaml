@@ -8,27 +8,24 @@ services:
     restart: unless-stopped
     network_mode: "host"
     volumes:
-      - ./caddy.yaml:/etc/caddy.yaml
-      - ./caddy_data:/data
+      - "./caddy.yaml:/etc/caddy.yaml"
+      - "./caddy_data:/data"
   livekit:
     image: livekit/livekit-server:latest
     command: --config /etc/livekit.yaml
     restart: unless-stopped
     network_mode: "host"
     volumes:
-      - ./livekit.yaml:/etc/livekit.yaml
+      - "./livekit.yaml:/etc/livekit.yaml"
   redis:
     image: redis:6-alpine
     command: redis-server /etc/redis.conf
     network_mode: "host"
     volumes:
-      - ./redis.conf:/etc/redis.conf
-  server:
-    build:
-      context: .
+      - "./redis.conf:/etc/redis.conf"
+  ximi-server:
+    image: ximi-server:latest
     ports:
       - 3000:3000
     environment:
       - SERVER_PORT=3000
-    volumes:
-      - ./:/app
