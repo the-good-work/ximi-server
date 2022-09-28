@@ -1,5 +1,6 @@
 import express from "express";
 import { AccessToken } from "livekit-server-sdk";
+import { XIMI } from "../types/room";
 
 const app = express();
 const port = 3000;
@@ -13,6 +14,14 @@ init();
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });
+
+const room: XIMI.Room = {
+  participants: [
+    {
+      type: "control",
+    },
+  ],
+};
 
 function init() {
   // if this room doesn't exist, it'll be automatically created when the first
