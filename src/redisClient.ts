@@ -1,7 +1,11 @@
 import { createClient } from "redis";
 
 const client = createClient({
-  url: "redis://livekit.ximi.server:6379",
+  url: process.env.REDIS_URL,
+});
+
+client.on("connect", () => {
+  console.log("hooray");
 });
 
 client.on("error", (err) => console.log("Redis Client Error", err));
@@ -13,6 +17,7 @@ async function init() {
 
   await client.set("key", "value");
   const value = await client.get("key");
+  console.log({ value });
 }
 
 export = { redisClient: client };
