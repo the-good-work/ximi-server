@@ -30,4 +30,4 @@ ximi-server:
 7. automate domain names for `redis.<your domain name>` and `server.<your server name>` with Caddy on `caddy.yaml`
 8. provide the url to redis in `.env`
 
-// or develop against a local instance of redis
+or develop against a local instance of redis
