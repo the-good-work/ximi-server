@@ -19,11 +19,7 @@ export async function checkRoom(roomName: string) {
       return room.name === roomName;
     }) > 0;
 
-  if (hasMatchingRoom) {
-    return true;
-  } else {
-    return false;
-  }
+  return hasMatchingRoom;
 }
 export async function generateToken(roomName: string, identity: string) {
   const token = new AccessToken(
