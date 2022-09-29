@@ -2,8 +2,7 @@ import { AccessToken } from "livekit-server-sdk";
 import type { AccessToken as TAccessToken } from "livekit-server-sdk";
 import { XIMI } from "../types/room";
 import { config } from "dotenv";
-import { roomServiceClient } from "./roomServiceClient";
-import redisClient from "./redisClient";
+import { roomServiceClient } from "../util/livekitClient";
 
 config();
 
@@ -18,8 +17,6 @@ const obtainAccessToken = async ({
   participantType: XIMI.Participant["type"];
   action: "createRoom" | "joinRoom" | "joinRoomControl";
 }): Promise<{ err: Error } | { accessToken: TAccessToken }> => {
-  console.log(redisClient);
-
   if (action === "createRoom" && participantType === "control") {
     // make sure room doesn't already exist
 
