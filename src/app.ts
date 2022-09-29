@@ -1,6 +1,8 @@
 import express from "express";
 import { obtainAccessToken } from "./obtainAccessToken";
 import { config } from "dotenv";
+import { createRoom } from "./createRoom";
+import { listRoom } from "./listRoom";
 
 config();
 
@@ -11,6 +13,16 @@ const port = 3000;
 app.post("/room/create", createRoom);
 app.post("/room/:type/join", joinRoom);
 */
+
+app.get("/rooms/create", async (req, res) => {
+  const data = await createRoom();
+  res.status(200).send(data);
+});
+
+app.get("/rooms/list", async (req, res) => {
+  const data = await listRoom();
+  res.status(200).send(data);
+});
 
 // check whether name is taken
 app.get("/participantName/validate", () => {});

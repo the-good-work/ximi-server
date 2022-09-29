@@ -1,8 +1,30 @@
-import { RequestHandler } from "express";
+import { generateName, generatePasscode } from "../util/roomGenerator";
+import { storeRoom } from "../util/redisClient";
+import {
+  checkRoom,
+  generateToken,
+  roomServiceClient,
+} from "../util/livekitClient";
+import type { XIMI } from "../types/room";
 
-const createRoom: RequestHandler = (req, res) => {
-  const { roomName } = req.body;
-  res.send(200);
+const createRoom = async () => {
+  const roomName = await generateName();
+  const passcode = await generatePasscode();
+  const room: XIMI.Room = { name: roomName, passcode };
+
+  if (await checkRoom(roomName)) {
+    return { message: "already exist" };
+  }
+
+  await roomServiceClient.createRoom({ name: roomName });
+  await storeRoom(roomName, room);
+  const token = await generateToken(roomName, "CONTROLLER1");
+
+  return {
+    roomName,
+    passcode,
+    token,
+  };
 };
 
 export { createRoom };
