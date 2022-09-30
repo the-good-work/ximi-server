@@ -21,7 +21,6 @@ export async function getRooms() {
   const result = await Promise.all(
     list.map(async (key) => {
       const room = JSON.parse(await client.get(key));
-      console.log(room);
       return { room: key, participants: room.participants.length };
     })
   );
