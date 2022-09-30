@@ -1,16 +1,23 @@
-import { generateName, generatePasscode } from "../util/roomGenerator";
-import { storeRoom } from "../util/redisClient";
+import { generateName, generatePasscode } from "./util/roomGenerator";
+import { storeRoom } from "./util/redisClient";
 import {
   checkRoom,
   generateToken,
   roomServiceClient,
-} from "../util/livekitClient";
+} from "./util/livekitClient";
 import type { XIMI } from "../types/room";
 
 const createRoom = async () => {
   const roomName = await generateName();
   const passcode = await generatePasscode();
-  const room: XIMI.Room = { name: roomName, passcode };
+  const room: XIMI.Room = {
+    name: roomName,
+    passcode,
+    participants: [
+      { name: "user1", type: "control" },
+      { name: "user2", type: "performer" },
+    ],
+  };
 
   if (await checkRoom(roomName)) {
     return { message: "already exist" };
