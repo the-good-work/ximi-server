@@ -9,17 +9,19 @@ export namespace XIMI {
     layoutPresets?: LayoutPreset[];
   };
 
-  type Participant = {
+  type Participant =  {
     name: string;
-    type: "performer" | "control" | "output";
+    type:  "control" | "output";
+  } | {
+    name: string;
+    type: "performer";
     // participant audio configuration
-    mute?: string[];
-    delay?: number;
+    audioMixMute: string[];
+    audioOutDelay: number;
     // participant layout configuration
-    icon?: string;
-    slots?: {
-      list: SlotTemplate[];
-      layout: LayoutType;
+    video: {
+      slots: Slot[];
+      layout: VideoLayout;
     };
   };
 
@@ -33,11 +35,11 @@ export namespace XIMI {
     participant: Participant[];
   };
 
-  type SlotTemplate = {
-    size: number[];
-    position: number[];
+  type Slot = {
+    size: {x : number, y : number};
+    position: {x : number, y : number};
     nickname: string;
   };
 
-  type LayoutType = "Default" | "A" | "B" | "C";
+  type VideoLayout = "Default" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K";
 }
