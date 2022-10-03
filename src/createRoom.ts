@@ -15,7 +15,7 @@ const createRoom = async () => {
     passcode,
     participants: [
       { name: "user1", type: "control" },
-      { name: "user2", type: "performer" },
+      { name: "user2", type: "output" },
     ],
   };
 
