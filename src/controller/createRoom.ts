@@ -1,11 +1,11 @@
-import { generateName, generatePasscode } from "./util/roomGenerator";
-import { storeRoom } from "./util/redisClient";
+import { generateName, generatePasscode } from "../util/roomGenerator";
+import { storeRoom } from "../util/redisClient";
 import {
   checkRoom,
   generateToken,
   roomServiceClient,
-} from "./util/livekitClient";
-import type { XIMI } from "../types/room";
+} from "../util/livekitClient";
+import type { XIMI } from "../../types/room";
 
 const createRoom = async () => {
   const roomName = await generateName();

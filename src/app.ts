@@ -1,8 +1,8 @@
 import express from "express";
-import { obtainAccessToken } from "./obtainAccessToken";
+import { obtainAccessToken } from "./controller/obtainAccessToken";
 import { config } from "dotenv";
-import { createRoom } from "./createRoom";
-import { listRoom } from "./listRoom";
+import { createRoom } from "./controller/createRoom";
+import { listRoom } from "./controller/listRoom";
 
 config();
 
@@ -11,25 +11,27 @@ const port = 3000;
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../swagger_output.json");
 
-/*
-app.post("/room/create", createRoom);
-app.post("/room/:type/join", joinRoom);
-*/
-
 app.use(express.json());
-app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.get("/rooms/create", async (_req, res) => {
+app.post("/rooms/create", async (_req, res) => {
+  /*
+  #swagger.tags = ['Rooms']
+  #swagger.description = 'Send a request to create a new room'
+  */
   const data = await createRoom();
   res.status(200).send(data);
 });
 
 app.get("/rooms/list", async (_req, res) => {
+  /*
+  #swagger.tags = ['Rooms']
+  #swagger.description = 'Send a request to fetch list of available rooms'
+  */
   const data = await listRoom();
   res.status(200).send(data);
 });
 
-// check whether name is taken
 app.get("/participantName/validate", () => {});
 
 app.get("/rooms", async (_req, res) => {

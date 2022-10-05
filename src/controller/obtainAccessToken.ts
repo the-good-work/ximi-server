@@ -1,8 +1,8 @@
 import { AccessToken } from "livekit-server-sdk";
 import type { AccessToken as TAccessToken } from "livekit-server-sdk";
-import { XIMI } from "../types/room";
+import { XIMI } from "../../types/room";
 import { config } from "dotenv";
-import { roomServiceClient } from "./util/livekitClient";
+import { roomServiceClient } from "../util/livekitClient";
 
 config();
 

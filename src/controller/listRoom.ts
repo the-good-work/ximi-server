@@ -1,4 +1,4 @@
-import { getRooms } from "./util/redisClient";
+import { getRooms } from "../util/redisClient";
 
 const listRoom = async () => {
   const data = await getRooms();
