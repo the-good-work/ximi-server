@@ -25,3 +25,6 @@ services:
       - "./redis.conf:/etc/redis.conf"
   ximi-server:
     image: ximi-server:latest
+    network_mode: "host"
+    env_file:
+      - .env

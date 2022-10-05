@@ -11,5 +11,6 @@ RUN pnpm install --frozen-lockfile --prod
 COPY . .
 
 EXPOSE 3000
+CMD [ "echo", "\"$REDIS_URL\"" ]
 CMD [ "npx", "tsc",  "src/app.js" ]
 CMD [ "node",  "dist/app.js" ]
