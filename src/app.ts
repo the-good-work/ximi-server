@@ -8,11 +8,16 @@ config();
 
 const app = express();
 const port = 3000;
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("../swagger_output.json");
 
 /*
 app.post("/room/create", createRoom);
 app.post("/room/:type/join", joinRoom);
 */
+
+app.use(express.json());
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.get("/rooms/create", async (req, res) => {
   const data = await createRoom();
