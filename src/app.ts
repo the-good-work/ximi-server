@@ -19,12 +19,12 @@ app.post("/room/:type/join", joinRoom);
 app.use(express.json());
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.get("/rooms/create", async (req, res) => {
+app.get("/rooms/create", async (_req, res) => {
   const data = await createRoom();
   res.status(200).send(data);
 });
 
-app.get("/rooms/list", async (req, res) => {
+app.get("/rooms/list", async (_req, res) => {
   const data = await listRoom();
   res.status(200).send(data);
 });
@@ -32,7 +32,7 @@ app.get("/rooms/list", async (req, res) => {
 // check whether name is taken
 app.get("/participantName/validate", () => {});
 
-app.get("/rooms", async (req, res) => {
+app.get("/rooms", async (_req, res) => {
   await obtainAccessToken({
     roomName: "test",
     participantName: "hello",
