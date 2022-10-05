@@ -1,0 +1,26 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: ["development"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy App
+        uses: appleboy/ssh-action@v.0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+
+          SCRIPT: |
+            cd /root/ximi-server
+            git pull origin development
+            pnpm install
+            pnpm run build
+            docker build -t ximi-server .
+            docker-compose down
+            docker-compose up -d
