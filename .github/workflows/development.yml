@@ -2,7 +2,7 @@ name: Build & Deploy
 
 on:
   push:
-    branches: [ "development" ]
+    branches: ["development"]
 
 jobs:
   deploy:
@@ -15,11 +15,12 @@ jobs:
           host: ${{secrets.SSH_HOST}}
           key: ${{secrets.SSH_KEY}}
           username: ${{secrets.SSH_USERNAME}}
-          
+
           SCRIPT: |
-            cd ximi-server
+            cd /root/ximi-server
             git pull origin development
             pnpm install
-            npm run build
+            pnpm run build
+            docker build -t ximi-server .
             docker-compose down
             docker-compose up -d
