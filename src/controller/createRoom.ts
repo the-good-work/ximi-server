@@ -1,13 +1,15 @@
 import { generateName, generatePasscode } from "../util/roomGenerator";
-import { storeRoom } from "../util/redisClient";
+import { storeRoom, getRooms } from "../util/redisClient";
 import {
   checkRoom,
   generateToken,
   roomServiceClient,
 } from "../util/livekitClient";
 import type { XIMI } from "../../types/room";
+import { ErrorTypeResponse } from "../../types/response";
 
 const createRoom = async () => {
+  let errorType: ErrorTypeResponse;
   const roomName = await generateName();
   const passcode = await generatePasscode();
   const room: XIMI.Room = {
@@ -20,7 +22,13 @@ const createRoom = async () => {
   };
 
   if (await checkRoom(roomName)) {
-    return { message: "already exist" };
+    errorType = "ROOM_EXIST";
+    throw Error(errorType);
+  }
+
+  if ((await getRooms()).length >= 10) {
+    errorType = "ROOM_MAX";
+    throw Error(errorType);
   }
 
   await roomServiceClient.createRoom({ name: roomName });
