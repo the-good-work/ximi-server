@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const swaggerAutogen = require('swagger-autogen')()
 
 const outputFile = './swagger_output.json'
@@ -9,7 +11,7 @@ const doc = {
     title: 'XIMI Server API',
     description: 'API documentation list for project XIMI'
   },
-  host: 'localhost:3000',
+  host: process.env.HOST_NAME,
   basePath: '/',
   schemes: ['http', 'https'],
   consumes: ['application/json'],
