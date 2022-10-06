@@ -14,7 +14,6 @@
     }
   ],
   "schemes": [
-    "http",
     "https"
   ],
   "consumes": [
@@ -31,11 +30,7 @@
         ],
         "description": "Send a request to create a new room",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/rooms/list": {
