@@ -8,6 +8,7 @@ import { StatusCode, GenericResponse } from "../types/response";
 
 config();
 
+const cors = require("cors");
 const app = express();
 const port = 3000;
 const swaggerUi = require("swagger-ui-express");
@@ -16,6 +17,12 @@ const swaggerFile = require("../swagger_output.json");
 let statusCode: StatusCode;
 let response: GenericResponse;
 
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

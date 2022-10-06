@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "node swagger.js && tsc",
     "start": "node dist/app.js",
     "build-docker": "docker build --tag ximi-server .",
     "swagger-autogen": "node swagger.js"
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@typescript-eslint/parser": ">=5.0.0 <6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "4.18",
     "livekit-server-sdk": "^1.0.2",

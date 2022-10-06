@@ -13,7 +13,7 @@ const doc = {
   },
   host: process.env.HOST_NAME,
   basePath: '/',
-  schemes: ['http', 'https'],
+  schemes: ['https'],
   consumes: ['application/json'],
   produces: ['application/json'],
   tags: [
