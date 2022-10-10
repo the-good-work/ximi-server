@@ -5,14 +5,14 @@ import {
   generateToken,
   roomServiceClient,
 } from "../util/livekitClient";
-import type { XIMI } from "../../types/room";
-import { ErrorTypeResponse } from "../../types/response";
+import { Room } from "@thegoodwork/ximi-types";
+import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
 
 const createRoom = async () => {
   let errorType: ErrorTypeResponse;
   const roomName = await generateName();
   const passcode = await generatePasscode();
-  const room: XIMI.Room = {
+  const room: Room = {
     name: roomName,
     passcode,
     participants: [

@@ -1,6 +1,6 @@
 import { createClient } from "redis";
 import { config } from "dotenv";
-import { XIMI } from "../../types/room";
+import { Room } from "@thegoodwork/ximi-types";
 
 config();
 
@@ -9,7 +9,7 @@ export const client = createClient({
   database: 1,
 });
 
-export async function storeRoom(roomName: string, room: XIMI.Room) {
+export async function storeRoom(roomName: string, room: Room) {
   await client.connect();
   await client.set(roomName, JSON.stringify(room));
   await client.disconnect();
