@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
+    "prestart": "node swagger.js",
     "postinstall": "pnpm install https://github.com/the-good-work/ximi-types.git",
     "start": "node dist/app.js",
-    "build-docker": "docker build --tag ximi-server .",
-    "swagger-autogen": "node swagger.js"
+    "build-docker": "docker build --tag ximi-server ."
   },
   "keywords": [],
   "author": "",

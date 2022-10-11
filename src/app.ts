@@ -49,7 +49,7 @@ app.post("/rooms/create", async (_req, res) => {
 app.get("/rooms/list", async (_req, res) => {
   /*
   #swagger.tags = ['Rooms']
-  #swagger.description = 'Send a request to fetch list of available any rooms'
+  #swagger.description = 'Send a request to fetch list of available rooms'
   #swagger.responses[200] = {
     description: 'Get room list success',
     schema: [{ room: "room_name", participants: 0 }]
