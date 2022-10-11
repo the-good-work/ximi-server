@@ -1,7 +1,10 @@
-import { getRooms } from "../util/redisClient";
+import { getAllRooms } from "../util/redisClient";
 
 const listRoom = async () => {
-  const data = await getRooms();
+  const allRooms = await getAllRooms();
+  const data = allRooms.map((room: any) => {
+    return { room: room.name, participants: room.participants.length };
+  });
 
   return data;
 };

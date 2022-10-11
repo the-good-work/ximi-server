@@ -15,13 +15,13 @@ export async function storeRoom(roomName: string, room: Room) {
   await client.disconnect();
 }
 
-export async function getRooms() {
+export async function getAllRooms() {
   await client.connect();
   const list = await client.keys("*");
   const result = await Promise.all(
     list.map(async (key) => {
       const room = JSON.parse(await client.get(key));
-      return { room: key, participants: room.participants.length };
+      return room;
     })
   );
   await client.disconnect();
