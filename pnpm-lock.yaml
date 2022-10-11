@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@thegoodwork/ximi-types': github:the-good-work/ximi-types
   '@types/express': 4.17.14
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': '>=5.0.0 <6.0.0'
@@ -19,6 +20,7 @@ specifiers:
   typescript: '*'
 
 dependencies:
+  '@thegoodwork/ximi-types': github.com/the-good-work/ximi-types/e0123c59dbfe8750c6f981ce513eea312af8ed10
   '@typescript-eslint/parser': 5.37.0_irgkl5vooow2ydyo6aokmferha
   cors: 2.8.5
   dotenv: 16.0.2
@@ -2099,3 +2101,9 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  github.com/the-good-work/ximi-types/e0123c59dbfe8750c6f981ce513eea312af8ed10:
+    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/e0123c59dbfe8750c6f981ce513eea312af8ed10}
+    name: '@thegoodwork/ximi-types'
+    version: 0.0.1
+    dev: false

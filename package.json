@@ -5,15 +5,17 @@
   "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node swagger.js && tsc",
+    "build": "tsc",
+    "prestart": "node swagger.js",
+    "postinstall": "pnpm install https://github.com/the-good-work/ximi-types.git",
     "start": "node dist/app.js",
-    "build-docker": "docker build --tag ximi-server .",
-    "swagger-autogen": "node swagger.js"
+    "build-docker": "docker build --tag ximi-server ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@thegoodwork/ximi-types": "github:the-good-work/ximi-types",
     "@typescript-eslint/parser": ">=5.0.0 <6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",

@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { errorHandler, successHandler } from "./util/responseApi";
-import { StatusCode, GenericResponse } from "../types/response";
+import { StatusCode, GenericResponse } from "@thegoodwork/ximi-types";
 
 config();
 
@@ -50,9 +50,14 @@ app.get("/rooms/list", async (_req, res) => {
   /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to fetch list of available rooms'
+  #swagger.responses[200] = {
+    description: 'Get room list success',
+    schema: [{ room: "room_name", participants: 0 }]
+  }
   */
   const data = await listRoom();
-  res.status(200).send(data);
+
+  return res.status(200).send(data);
 });
 
 app.get("/participantName/validate", () => {});

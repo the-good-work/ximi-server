@@ -2,7 +2,7 @@ import {
   ErrorTypeResponse,
   StatusCode,
   GenericResponse,
-} from "../../types/response";
+} from "@thegoodwork/ximi-types";
 let statusCode: StatusCode;
 let response: GenericResponse;
 
