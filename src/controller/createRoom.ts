@@ -8,17 +8,13 @@ import {
 import { Room } from "@thegoodwork/ximi-types";
 import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
 
-const createRoom = async () => {
+const createRoom = async (roomName: string, passcode: string) => {
   let errorType: ErrorTypeResponse;
-  const roomName = await generateName();
-  const passcode = await generatePasscode();
+  const controllerId = "CONTROL-" + roomName + "-1";
   const room: Room = {
     name: roomName,
     passcode,
-    participants: [
-      { name: "user3", type: "control" },
-      { name: "user4", type: "output" },
-    ],
+    participants: [{ name: controllerId, type: "control" }],
   };
 
   if (await checkRoom(roomName)) {
@@ -33,11 +29,9 @@ const createRoom = async () => {
 
   await roomServiceClient.createRoom({ name: roomName });
   await storeRoom(roomName, room);
-  const token = await generateToken(roomName, "CONTROLLER1");
+  const token = await generateToken(roomName, controllerId);
 
   return {
-    // roomName,
-    // passcode,
     token,
   };
 };

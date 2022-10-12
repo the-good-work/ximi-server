@@ -25,7 +25,7 @@ app.use(
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.post("/rooms/create", async (_req, res) => {
+app.post("/rooms/create", async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to create a new room'
@@ -47,7 +47,8 @@ app.post("/rooms/create", async (_req, res) => {
   */
 
   try {
-    const data = await createRoom();
+    const { name, passcode } = req.body;
+    const data = await createRoom(name, passcode);
 
     return res.status(200).send(data);
   } catch (e) {
