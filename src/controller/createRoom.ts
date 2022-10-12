@@ -1,5 +1,5 @@
 import { generateName, generatePasscode } from "../util/roomGenerator";
-import { storeRoom, getRooms } from "../util/redisClient";
+import { storeRoom, getAllRooms } from "../util/redisClient";
 import {
   checkRoom,
   generateToken,
@@ -16,8 +16,8 @@ const createRoom = async () => {
     name: roomName,
     passcode,
     participants: [
-      { name: "user1", type: "control" },
-      { name: "user2", type: "output" },
+      { name: "user3", type: "control" },
+      { name: "user4", type: "output" },
     ],
   };
 
@@ -26,7 +26,7 @@ const createRoom = async () => {
     throw Error(errorType);
   }
 
-  if ((await getRooms()).length >= 10) {
+  if ((await getAllRooms()).length >= 10) {
     errorType = "ROOM_MAX";
     throw Error(errorType);
   }
@@ -36,8 +36,8 @@ const createRoom = async () => {
   const token = await generateToken(roomName, "CONTROLLER1");
 
   return {
-    roomName,
-    passcode,
+    // roomName,
+    // passcode,
     token,
   };
 };
