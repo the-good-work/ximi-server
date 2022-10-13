@@ -1,5 +1,7 @@
 import { RoomServiceClient, AccessToken } from "livekit-server-sdk";
+import type { VideoGrant } from "livekit-server-sdk";
 import { config } from "dotenv";
+import { Participant } from "@thegoodwork/ximi-types";
 
 config();
 
@@ -21,12 +23,31 @@ export async function checkRoom(roomName: string) {
 
   return hasMatchingRoom;
 }
-export async function generateToken(roomName: string, identity: string) {
+export async function generateToken(
+  roomName: string,
+  type: Participant["type"],
+  identity: string
+) {
+  let tokenPermission: VideoGrant;
+  if (type === "CONTROL") {
+    tokenPermission = {
+      roomCreate: true,
+      roomJoin: true,
+      roomList: true,
+      roomAdmin: true,
+    };
+  } else if (type === "PERFORMER") {
+    tokenPermission = {
+      roomJoin: true,
+    };
+  }
+  tokenPermission.room = roomName;
   const token = new AccessToken(
     process.env.LIVEKIT_API_KEY,
     process.env.LIVEKIT_API_SECRET,
     { identity }
   );
-  token.addGrant({ roomAdmin: true, roomList: true, room: roomName });
+  token.addGrant(tokenPermission);
+
   return { accessToken: token };
 }

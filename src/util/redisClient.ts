@@ -15,6 +15,14 @@ export async function storeRoom(roomName: string, room: Room) {
   await client.disconnect();
 }
 
+export async function getRoom(roomName: string) {
+  await client.connect();
+  const roomData = JSON.parse(await client.get(roomName));
+  await client.disconnect();
+
+  return roomData;
+}
+
 export async function getAllRooms() {
   await client.connect();
   const list = await client.keys("*");

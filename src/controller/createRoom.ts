@@ -14,7 +14,7 @@ const createRoom = async (roomName: string, passcode: string) => {
   const room: Room = {
     name: roomName,
     passcode,
-    participants: [{ name: controllerId, type: "control" }],
+    participants: [{ name: controllerId, type: "CONTROL" }],
   };
 
   if (await checkRoom(roomName)) {
@@ -29,7 +29,7 @@ const createRoom = async (roomName: string, passcode: string) => {
 
   await roomServiceClient.createRoom({ name: roomName });
   await storeRoom(roomName, room);
-  const token = await generateToken(roomName, controllerId);
+  const token = await generateToken(roomName, "CONTROL", controllerId);
 
   return {
     token,
