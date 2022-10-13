@@ -4,7 +4,8 @@ import { config } from "dotenv";
 import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
-import { ErrorTypeResponse } from "../types/response";
+import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
+import { checkPasscode } from "./controller/checkPasscode";
 
 config();
 
@@ -15,6 +16,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../swagger_output.json");
 
 let response;
+let errorType: ErrorTypeResponse;
 
 app.use(
   cors({
@@ -31,7 +33,7 @@ app.post("/rooms/create", async (req, res) => {
   #swagger.description = 'Send a request to create a new room'
   #swagger.responses[200] = {
     schema: {
-      token: '<token_object>'
+      accessToken: '<token_object>'
     }
   }
   #swagger.responses[422] = {
@@ -52,7 +54,7 @@ app.post("/rooms/create", async (req, res) => {
 
     return res.status(200).send(data);
   } catch (e) {
-    const errorType: ErrorTypeResponse = e.message;
+    errorType = e.message;
     switch (errorType) {
       case "ROOM_MAX": {
         response = { message: "Max 10 rooms allowed" };
@@ -90,9 +92,9 @@ app.get("/rooms/list", async (_req, res) => {
 
     return res.status(200).send(data);
   } catch (e) {
-    const type = e.message;
+    errorType = e.message;
 
-    switch (type) {
+    switch (errorType) {
       default:
         return res.status(500).send(response);
     }
@@ -121,9 +123,63 @@ app.post("/rooms/validate-name", async (req, res) => {
 
     return res.status(200).send({ available: await checkName(name) });
   } catch (e) {
-    const type = e.message;
+    errorType = e.message;
 
-    switch (type) {
+    switch (errorType) {
+      default:
+        return res.status(500).send(response);
+    }
+  }
+});
+
+app.post("/rooms/validate-passcode", async (req, res) => {
+  /*
+  #swagger.tags = ['Rooms']
+  #swagger.description = 'Send a request to room passcode for joining a room'
+  #swagger.responses[200] = {
+    schema: {
+      accessToken: '<token_object>'
+    }
+  }
+  #swagger.responses[422] = {
+    schema: {
+      message: 'Incorrect passcode'
+    }
+  }
+  #swagger.responses[422] = {
+    schema: {
+      message: 'Room does not exist'
+    }
+  }
+  #swagger.responses[500] = {
+    schema: {
+      message: 'Internal server error'
+    }
+  }
+  */
+  try {
+    const { room_name, participant_name, participant_type, passcode } =
+      req.body;
+    const data = await checkPasscode(
+      room_name,
+      participant_name,
+      participant_type,
+      passcode
+    );
+
+    return res.status(200).send(data);
+  } catch (e) {
+    errorType = e.message;
+
+    switch (errorType) {
+      case "INCORRECT_PASSCODE": {
+        response = { message: "Incorrect passcode" };
+        return res.status(422).send(response);
+      }
+      case "ROOM_NOT_EXIST": {
+        response = { message: "Room does not exist" };
+        return res.status(422).send(response);
+      }
       default:
         return res.status(500).send(response);
     }
