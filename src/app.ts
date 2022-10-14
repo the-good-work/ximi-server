@@ -6,6 +6,7 @@ import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
 import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
 import { checkPasscode } from "./controller/checkPasscode";
+import { joinRoomHandler } from "./controller/joinRoomHandler";
 
 config();
 
@@ -180,6 +181,30 @@ app.post("/rooms/validate-passcode", async (req, res) => {
         response = { message: "Room does not exist" };
         return res.status(422).send(response);
       }
+      default:
+        return res.status(500).send(response);
+    }
+  }
+});
+
+app.post("/join-room", async (req, res) => {
+  /*
+  #swagger.tags = ['Webhook']
+  #swagger.description = 'Send a request to store room data when join room'
+  #swagger.responses[500] = {
+    schema: {
+      message: 'Internal server error'
+    }
+  }
+  */
+  try {
+    await joinRoomHandler(req);
+
+    return res.status(200).send();
+  } catch (e) {
+    errorType = e.message;
+
+    switch (errorType) {
       default:
         return res.status(500).send(response);
     }
