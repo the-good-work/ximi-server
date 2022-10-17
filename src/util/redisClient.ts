@@ -1,37 +1,28 @@
-import { createClient } from "redis";
 import { config } from "dotenv";
 import { Room } from "@thegoodwork/ximi-types";
+import { default as Redis } from "ioredis";
 
 config();
 
-export const client = createClient({
-  url: process.env.REDIS_URL,
-  database: 1,
-});
+const redis = new Redis(process.env.REDIS_URL);
 
 export async function storeRoom(roomName: string, room: Room) {
-  await client.connect();
-  await client.set(roomName, JSON.stringify(room));
-  await client.disconnect();
+  redis.set(roomName, JSON.stringify(room));
 }
 
 export async function getRoom(roomName: string) {
-  await client.connect();
-  const roomData = JSON.parse(await client.get(roomName));
-  await client.disconnect();
+  const roomData = JSON.parse(await redis.get(roomName));
 
   return roomData;
 }
 
 export async function getAllRooms() {
-  await client.connect();
-  const list = await client.keys("*");
+  const list = await redis.keys("*");
   const result = await Promise.all(
     list.map(async (key) => {
-      const room = JSON.parse(await client.get(key));
+      const room = JSON.parse(await redis.get(key));
       return room;
     })
   );
-  await client.disconnect();
   return result;
 }
