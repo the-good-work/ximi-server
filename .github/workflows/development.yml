@@ -17,14 +17,11 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
 
           SCRIPT: |
-            touch /root/test
-            source /root/.bashrc
-            echo $PATH
             cd /root/ximi-server
             git pull origin development
-            pnpm install
-            node swagger.js
-            pnpm run build
+            /root/.local/share/pnpm/pnpm install
+            /root/.nvm/versions/node/v18.9.1/bin/node swagger.js
+            /root/.local/share/pnpm/pnpm run build
             docker build -t ximi-server .
             docker-compose down
             docker-compose up -d
