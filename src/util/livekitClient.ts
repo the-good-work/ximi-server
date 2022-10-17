@@ -60,7 +60,7 @@ export async function generateToken(
   );
   token.addGrant(tokenPermission);
 
-  return { accessToken: token };
+  return token.toJwt();
 }
 
 export async function webhookReceiver(req: any) {
