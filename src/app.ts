@@ -6,7 +6,7 @@ import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
 import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
 import { checkPasscode } from "./controller/checkPasscode";
-import { joinRoomHandler } from "./controller/joinRoomHandler";
+import { webhookHandler } from "./controller/webhookHandler";
 
 config();
 
@@ -55,6 +55,7 @@ app.post("/rooms/create", async (req, res) => {
 
     return res.status(200).send(data);
   } catch (e) {
+    console.log(e);
     errorType = e.message;
     switch (errorType) {
       case "ROOM_MAX": {
@@ -93,6 +94,7 @@ app.get("/rooms/list", async (_req, res) => {
 
     return res.status(200).send(data);
   } catch (e) {
+    console.log(e);
     errorType = e.message;
 
     switch (errorType) {
@@ -124,6 +126,7 @@ app.post("/rooms/validate-name", async (req, res) => {
 
     return res.status(200).send({ available: await checkName(name) });
   } catch (e) {
+    console.log(e);
     errorType = e.message;
 
     switch (errorType) {
@@ -136,7 +139,16 @@ app.post("/rooms/validate-name", async (req, res) => {
 app.post("/rooms/validate-passcode", async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
-  #swagger.description = 'Send a request to room passcode for joining a room'
+  #swagger.description = 'Send a request to validate room passcode for joining a room'
+  #swagger.parameters['body'] = {
+    in: 'body',
+    schema: {
+      room_name: 'myRoom',
+      participant_name: 'user1',
+      participant_type: 'CONTROL | PERFORMER | OUTPUT',
+      passcode: '12345'
+    }
+  }
   #swagger.responses[200] = {
     schema: {
       accessToken: '<token_object>'
@@ -170,6 +182,7 @@ app.post("/rooms/validate-passcode", async (req, res) => {
 
     return res.status(200).send(data);
   } catch (e) {
+    console.log(e);
     errorType = e.message;
 
     switch (errorType) {
@@ -187,10 +200,10 @@ app.post("/rooms/validate-passcode", async (req, res) => {
   }
 });
 
-app.post("/join-room", async (req, res) => {
+app.post("/webhook-receiver", async (req, res) => {
   /*
   #swagger.tags = ['Webhook']
-  #swagger.description = 'Send a request to store room data when join room'
+  #swagger.description = 'Handle api request sent from livekit'
   #swagger.responses[500] = {
     schema: {
       message: 'Internal server error'
@@ -198,10 +211,11 @@ app.post("/join-room", async (req, res) => {
   }
   */
   try {
-    await joinRoomHandler(req);
+    await webhookHandler(req);
 
     return res.status(200).send();
   } catch (e) {
+    console.log(e);
     errorType = e.message;
 
     switch (errorType) {
