@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { Room } from "@thegoodwork/ximi-types";
-import { default as Redis } from "ioredis";
+import Redis from "ioredis";
 
 config();
 
