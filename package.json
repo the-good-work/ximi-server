@@ -23,6 +23,7 @@
     "ioredis": "^5.2.3",
     "livekit-server-sdk": "^1.0.2",
     "redis": "^4.3.1",
+    "string-validator": "^1.0.5",
     "swagger-autogen": "^2.22.0",
     "swagger-ui-express": "^4.5.0"
   },
