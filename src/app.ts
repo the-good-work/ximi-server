@@ -62,7 +62,7 @@ app.post("/rooms/create", async (req, res) => {
       errorType = "CREATE_ROOM_INVALID";
       throw Error(errorType);
     }
-    const data = await createRoom(name, passcode);
+    const data = await createRoom(name.toUpperCase(), passcode);
 
     return res.status(200).send(data);
   } catch (e) {
@@ -138,14 +138,25 @@ app.post("/rooms/validate-name", async (req, res) => {
   */
   try {
     const { name } = req.body;
+    if (!checkAlphanumeric(name) || name.length > 5) {
+      errorType = "PARTICIPANT_NAME_INVALID";
+      throw Error(errorType);
+    }
 
-    return res.status(200).send({ available: await checkName(name) });
+    return res
+      .status(200)
+      .send({ available: await checkName(name.toUpperCase()) });
   } catch (e) {
-    console.log(e);
     errorType = e.message;
 
     switch (errorType) {
+      case "PARTICIPANT_NAME_INVALID": {
+        response = { message: "Invalid participant name" };
+        return res.status(422).send(response);
+      }
       default:
+        console.log(e);
+        response = { message: "Internal server error" };
         return res.status(500).send(response);
     }
   }
