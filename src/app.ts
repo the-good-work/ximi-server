@@ -7,6 +7,7 @@ import { checkName } from "./controller/checkName";
 import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
 import { checkPasscode } from "./controller/checkPasscode";
 import { webhookHandler } from "./controller/webhookHandler";
+import { checkAlphanumeric, checkNumeric } from "./util/validator";
 
 config();
 
@@ -15,6 +16,7 @@ const app = express();
 const port = 3000;
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../swagger_output.json");
+// const str = require("string-validator");
 
 let response;
 let errorType: ErrorTypeResponse;
@@ -51,18 +53,31 @@ app.post("/rooms/create", async (req, res) => {
 
   try {
     const { name, passcode } = req.body;
+    if (
+      !checkAlphanumeric(name) ||
+      name.length > 10 ||
+      !checkNumeric(passcode) ||
+      passcode.length != 5
+    ) {
+      errorType = "CREATE_ROOM_INVALID";
+      throw Error(errorType);
+    }
     const data = await createRoom(name, passcode);
 
     return res.status(200).send(data);
   } catch (e) {
-    console.log(e);
     errorType = e.message;
     switch (errorType) {
       case "ROOM_MAX": {
         response = { message: "Max 10 rooms allowed" };
         return res.status(422).send(response);
       }
+      case "CREATE_ROOM_INVALID": {
+        response = { message: "Invalid room name or passcode" };
+        return res.status(422).send(response);
+      }
       default: {
+        console.log(e);
         response = { message: "Internal server error" };
         return res.status(500).send(response);
       }
