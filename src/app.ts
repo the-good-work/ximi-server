@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
-import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
+import { ErrorTypeResponse, Participant } from "@thegoodwork/ximi-types";
 import { checkPasscode } from "./controller/checkPasscode";
 import { webhookHandler } from "./controller/webhookHandler";
 import { checkAlphanumeric, checkNumeric } from "./util/validator";
@@ -36,12 +36,23 @@ app.post("/rooms/create", async (req, res) => {
   #swagger.description = 'Send a request to create a new room'
   #swagger.responses[200] = {
     schema: {
-      accessToken: '<token_object>'
+      token: '<token_value>'
     }
   }
   #swagger.responses[422] = {
-    schema: {
-      message: 'Max 10 rooms allowed'
+    content: {
+      "application/json": {
+        schema: {
+          anyOf: [
+            {
+              $ref: '#/definitions/MaximumRoomErrorResponse'
+            },
+            {
+              $ref: '#/definitions/InvalidRoomErrorResponse'
+            }
+          ]
+        }
+      }
     }
   }
   #swagger.responses[500] = {
@@ -166,28 +177,40 @@ app.post("/rooms/validate-passcode", async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to validate room passcode for joining a room'
-  #swagger.parameters['body'] = {
-    in: 'body',
-    schema: {
-      room_name: 'myRoom',
-      participant_name: 'user1',
-      participant_type: 'CONTROL | PERFORMER | OUTPUT',
-      passcode: '12345'
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "applciation/json": {
+        schema: {
+          $ref: '#/definitions/ValidatePasscodeRequest'
+        },
+        examples: {
+          PERFORMER: { $ref: '#/components/examples/ValidatePasscodePerformerRequest' },
+          CONTROL: { $ref: '#/components/examples/ValidatePasscodeControlRequest' },
+          OUTPUT: { $ref: '#/components/examples/ValidatePasscodeOutputRequest' }
+        }
+      }
     }
   }
   #swagger.responses[200] = {
     schema: {
-      accessToken: '<token_object>'
+      token: '<token_value>'
     }
   }
   #swagger.responses[422] = {
-    schema: {
-      message: 'Incorrect passcode'
-    }
-  }
-  #swagger.responses[422] = {
-    schema: {
-      message: 'Room does not exist'
+    content: {
+      "application/json": {
+        schema: {
+          anyOf: [
+            {
+              $ref: '#/definitions/IncorrectPasscodeErrorResponse'
+            },
+            {
+              $ref: '#/definitions/RoomNotExistErrorResponse'
+            }
+          ]
+        }
+      }
     }
   }
   #swagger.responses[500] = {
@@ -197,14 +220,21 @@ app.post("/rooms/validate-passcode", async (req, res) => {
   }
   */
   try {
-    const { room_name, participant_name, participant_type, passcode } =
-      req.body;
-    const data = await checkPasscode(
-      room_name,
-      participant_name,
-      participant_type,
-      passcode
-    );
+    let params: {
+      room_name: string;
+      participant_name?: string;
+      participant_type: Participant["type"];
+      passcode: string;
+    } = {
+      ...req.body,
+      ...(req.body.participant_name && {
+        participant_name: req.body.participant_name as string,
+      }),
+    };
+    console.log(req.body);
+    console.log(params);
+
+    let data = await checkPasscode(params);
 
     return res.status(200).send(data);
   } catch (e) {

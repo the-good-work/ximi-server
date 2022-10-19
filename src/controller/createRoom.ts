@@ -1,4 +1,3 @@
-import { generateName, generatePasscode } from "../util/roomGenerator";
 import { storeRoom, getAllRooms } from "../util/redisClient";
 import {
   checkRoom,
@@ -15,6 +14,8 @@ const createRoom = async (roomName: string, passcode: string) => {
     name: roomName,
     passcode,
     participants: [],
+    controlCount: 1,
+    outputCount: 0,
   };
 
   if (await checkRoom(roomName)) {

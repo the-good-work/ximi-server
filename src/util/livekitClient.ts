@@ -23,12 +23,10 @@ export const roomServiceClient = svc;
 
 export async function checkRoom(roomName: string) {
   const existingRooms = await roomServiceClient.listRooms();
-
   const hasMatchingRoom =
     existingRooms.findIndex((room) => {
       return room.name === roomName;
     }) > 0;
-
   return hasMatchingRoom;
 }
 export async function generateToken(
