@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const swaggerAutogen = require('swagger-autogen')()
+const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' })
 
 const outputFile = './swagger_output.json'
 const endpointsFiles = ['./src/app.ts']
@@ -21,7 +21,47 @@ const doc = {
       name: 'Rooms',
       description: 'List of endpoints related to room'
     }
-  ]
+  ],
+  definitions: {
+    ValidatePasscodeRequest: {
+      room_name: 'myRoom',
+      participant_name: 'user1',
+      participant_type: 'PERFORMER | CONTROL | OUTPUT',
+      passcode: '12345'
+    },
+    IncorrectPasscodeErrorResponse: {
+      message: 'Incorrect passcode'
+    },
+    RoomNotExistErrorResponse: {
+      message: 'Room does not exist'
+    },
+    MaximumRoomErrorResponse: {
+      message: 'Max 10 rooms allowed'
+    },
+    InvalidRoomErrorResponse: {
+      message: 'Invalid room name or passcode'
+    }
+  },
+  components: {
+    examples: {
+      ValidatePasscodePerformerRequest: {
+        room_name: 'myRoom',
+        participant_name: 'user1',
+        participant_type: 'PERFORMER',
+        passcode: '12345'
+      },
+      ValidatePasscodeControlRequest: {
+        room_name: 'myRoom',
+        participant_type: 'CONTROL',
+        passcode: '12345'
+      },
+      ValidatePasscodeOutputRequest: {
+        room_name: 'myRoom',
+        participant_type: 'OUTPUT',
+        passcode: '12345'
+      }
+    }
+  }
 }
 
 swaggerAutogen(outputFile, endpointsFiles, doc)
