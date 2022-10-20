@@ -61,9 +61,9 @@ export async function generateToken(
   return token.toJwt();
 }
 
-export async function webhookReceiver(req: any) {
-  const event = receiver.receive(req.body, req.get("Authorization"));
-  console.log("event payload: ", event);
+// export async function webhookReceiver(req: any) {
+//   const event = receiver.receive(req.body, req.get("Authorization"));
+//   console.log("event payload: ", event);
 
-  return event;
-}
+//   return event;
+// }

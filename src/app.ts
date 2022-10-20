@@ -267,7 +267,7 @@ app.post("/webhook-receiver", async (req, res) => {
   }
   */
   try {
-    await webhookHandler(req);
+    await webhookHandler(req.body);
 
     return res.status(200).send();
   } catch (e) {
