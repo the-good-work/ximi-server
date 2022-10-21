@@ -14,7 +14,7 @@ const createRoom = async (roomName: string, passcode: string) => {
     name: roomName,
     passcode,
     participants: [],
-    controlCount: 1,
+    controlCount: 0,
     outputCount: 0,
   };
 
