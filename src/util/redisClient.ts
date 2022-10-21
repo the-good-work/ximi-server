@@ -16,6 +16,10 @@ export async function getRoom(roomName: string) {
   return roomData;
 }
 
+export async function deleteRoom(roomName: string) {
+  redis.del(roomName);
+}
+
 export async function getAllRooms() {
   const list = await redis.keys("*");
   const result = await Promise.all(
