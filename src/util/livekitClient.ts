@@ -1,8 +1,4 @@
-import {
-  RoomServiceClient,
-  AccessToken,
-  WebhookReceiver,
-} from "livekit-server-sdk";
+import { RoomServiceClient, AccessToken } from "livekit-server-sdk";
 import type { VideoGrant, AccessTokenOptions } from "livekit-server-sdk";
 import { config } from "dotenv";
 import { Participant } from "@thegoodwork/ximi-types";
@@ -11,10 +7,6 @@ config();
 
 const svc = new RoomServiceClient(
   process.env.LIVEKIT_HOST,
-  process.env.LIVEKIT_API_KEY,
-  process.env.LIVEKIT_API_SECRET
-);
-const receiver = new WebhookReceiver(
   process.env.LIVEKIT_API_KEY,
   process.env.LIVEKIT_API_SECRET
 );

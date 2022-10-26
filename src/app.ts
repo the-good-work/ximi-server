@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import { obtainAccessToken } from "./controller/obtainAccessToken";
 import { config } from "dotenv";
 import { createRoom } from "./controller/createRoom";
@@ -27,7 +28,19 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
+
+var rawBodySaver = function (req, res, buf, encoding) {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || "utf8");
+  }
+};
+
+app.use(bodyParser.json({ verify: rawBodySaver }));
+app.use(bodyParser.urlencoded({ verify: rawBodySaver, extended: true }));
+app.use(bodyParser.raw({ verify: rawBodySaver, type: "*/*" }));
+
+app.post("/livekit-webhook", webhookHandler);
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.post("/rooms/create", async (req, res) => {
@@ -248,33 +261,6 @@ app.post("/rooms/validate-passcode", async (req, res) => {
         response = { message: "Room does not exist" };
         return res.status(422).send(response);
       }
-      default:
-        return res.status(500).send(response);
-    }
-  }
-});
-
-app.use("/livekit-webhook", express.raw());
-
-app.post("/livekit-webhook",  async (req, res) => {
-  /*
-  #swagger.tags = ['Webhook']
-  #swagger.description = 'Handle api request sent from livekit'
-  #swagger.responses[500] = {
-    schema: {
-      message: 'Internal server error'
-    }
-  }
-  */
- console.log('hit webhook handler');
-  try {
-    await webhookHandler(req.body);
-    return res.status(200).send();
-  } catch (e) {
-    console.log(e);
-    errorType = e.message;
-
-    switch (errorType) {
       default:
         return res.status(500).send(response);
     }

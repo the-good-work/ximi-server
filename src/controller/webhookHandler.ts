@@ -1,48 +1,21 @@
-// import { webhookReceiver } from "../util/livekitClient";
+import { WebhookReceiver } from "livekit-server-sdk";
 import { deleteRoom, getRoom, storeRoom } from "../util/redisClient";
-// import type { WebhookEvent } from "livekit-server-sdk/dist/proto/livekit_webhook";
+import { RequestHandler } from "express";
 
-const webhookHandler = async (data: any) => {
-  // const result: WebhookEvent = await webhookReceiver(req);
-  console.log("livekit event: ", data);
-  const roomName = data.room.name;
-  let room = await getRoom(roomName);
-
-  switch (data.event) {
-    case "participant_joined": {
-      room.participants.push({
-        name: data.participant.identity,
-        type: data.participant.metadata,
-      });
-      if (data.participant.metadata === "CONTROL") {
-        room.controlCount = room.controlCount++;
-      } else if (data.participant.metadata === "OUTPUT") {
-        room.outputCount = room.outputCount++;
-      }
-
-      console.log("room data: ", room);
-      await storeRoom(roomName, room);
-      break;
-    }
-    case "participant_left": {
-      room.participants.filter(
-        (participant: any) => participant.name !== data.participant.identity
-      );
-      if (data.participant.metadata === "CONTROL") {
-        room.controlCount = room.controlCount--;
-      } else if (data.participant.metadata === "OUTPUT") {
-        room.outputCount = room.outputCount--;
-      }
-
-      console.log("room data: ", room);
-      await storeRoom(roomName, room);
-      break;
-    }
-    case "room_finished": {
-      await deleteRoom(roomName);
-      break;
-    }
+const webhookHandler: RequestHandler = async (req, res) => {
+  const receiver = new WebhookReceiver(
+    process.env.LIVEKIT_API_KEY,
+    process.env.LIVEKIT_API_SECRET
+  );
+  console.log((req as any).rawBody);
+  try {
+    const result = receiver.receive(req.body, req.headers.authorization);
+    console.log("livekit event: ", { result });
+  } catch (err) {
+    console.log(err);
   }
+
+  return res.send({ ok: true });
 };
 
 export { webhookHandler };

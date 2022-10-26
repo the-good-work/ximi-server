@@ -9,6 +9,7 @@
     "prestart": "node swagger.js",
     "postinstall": "pnpm install https://github.com/the-good-work/ximi-types.git",
     "start": "node dist/app.js",
+    "dev": "tsc -w",
     "build-docker": "docker build --tag ximi-server ."
   },
   "keywords": [],
@@ -17,6 +18,7 @@
   "dependencies": {
     "@thegoodwork/ximi-types": "github:the-good-work/ximi-types",
     "@typescript-eslint/parser": ">=5.0.0 <6.0.0",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "4.18",
