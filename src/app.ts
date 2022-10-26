@@ -231,8 +231,6 @@ app.post("/rooms/validate-passcode", async (req, res) => {
         participant_name: req.body.participant_name as string,
       }),
     };
-    console.log(req.body);
-    console.log(params);
 
     let data = await checkPasscode(params);
 
@@ -256,7 +254,9 @@ app.post("/rooms/validate-passcode", async (req, res) => {
   }
 });
 
-app.post("/webhook-receiver", async (req, res) => {
+app.use("/livekit-webhook", express.raw());
+
+app.post("/livekit-webhook",  async (req, res) => {
   /*
   #swagger.tags = ['Webhook']
   #swagger.description = 'Handle api request sent from livekit'
@@ -266,9 +266,9 @@ app.post("/webhook-receiver", async (req, res) => {
     }
   }
   */
+ console.log('hit webhook handler');
   try {
     await webhookHandler(req.body);
-
     return res.status(200).send();
   } catch (e) {
     console.log(e);
