@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
-import { obtainAccessToken } from "./controller/obtainAccessToken";
 import { config } from "dotenv";
+import cors from "cors";
 import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
@@ -10,12 +10,12 @@ import { checkPasscode } from "./controller/checkPasscode";
 import { webhookHandler } from "./controller/webhookHandler";
 import { checkAlphanumeric, checkNumeric } from "./util/validator";
 
+import swaggerUi from "swagger-ui-express";
+
 config();
 
-const cors = require("cors");
 const app = express();
 const port = 3000;
-const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../swagger_output.json");
 // const str = require("string-validator");
 
@@ -29,9 +29,14 @@ app.use(
   })
 );
 
-var rawBodySaver = function (req, res, buf, encoding) {
+var rawBodySaver = function (
+  req: Request,
+  _res: Response,
+  buf: Buffer,
+  encoding: BufferEncoding
+) {
   if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || "utf8");
+    (req as any).rawBody = buf.toString(encoding || "utf8");
   }
 };
 
@@ -265,16 +270,6 @@ app.post("/rooms/validate-passcode", async (req, res) => {
         return res.status(500).send(response);
     }
   }
-});
-
-app.get("/rooms", async (_req, res) => {
-  await obtainAccessToken({
-    roomName: "test",
-    participantName: "hello",
-    participantType: "performer",
-    action: "createRoom",
-  });
-  res.send("lol");
 });
 
 app.listen(port, () => {

@@ -1,28 +1,36 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
     "title": "XIMI Server API",
     "description": "API documentation list for project XIMI"
   },
-  "host": "localhost:3000",
-  "basePath": "/",
   "tags": [
     {
       "name": "Rooms",
       "description": "List of endpoints related to room"
     }
   ],
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "paths": {
+    "/livekit-webhook": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/rooms/create": {
       "post": {
         "tags": [
@@ -30,7 +38,108 @@
         ],
         "description": "Send a request to create a new room",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MaximumRoomErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InvalidRoomErrorResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  },
+                  "passcode": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/rooms/list": {
@@ -42,26 +151,400 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "room": {
+                        "type": "string",
+                        "example": "<room_name>"
+                      },
+                      "participants": {
+                        "type": "number",
+                        "example": 2
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "room": {
+                        "type": "string",
+                        "example": "<room_name>"
+                      },
+                      "participants": {
+                        "type": "number",
+                        "example": 2
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/participantName/validate": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/rooms": {
-      "get": {
-        "description": "",
+    "/rooms/validate-name": {
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to validate participant nickname availability",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "available": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "available": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/validate-passcode": {
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to validate room passcode for joining a room",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/IncorrectPasscodeErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RoomNotExistErrorResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "applciation/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidatePasscodeRequest"
+              },
+              "examples": {
+                "PERFORMER": {
+                  "$ref": "#/components/examples/ValidatePasscodePerformerRequest"
+                },
+                "CONTROL": {
+                  "$ref": "#/components/examples/ValidatePasscodeControlRequest"
+                },
+                "OUTPUT": {
+                  "$ref": "#/components/examples/ValidatePasscodeOutputRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "examples": {
+      "ValidatePasscodePerformerRequest": {
+        "value": {
+          "room_name": "myRoom",
+          "participant_name": "user1",
+          "participant_type": "PERFORMER",
+          "passcode": "12345"
+        }
+      },
+      "ValidatePasscodeControlRequest": {
+        "value": {
+          "room_name": "myRoom",
+          "participant_type": "CONTROL",
+          "passcode": "12345"
+        }
+      },
+      "ValidatePasscodeOutputRequest": {
+        "value": {
+          "room_name": "myRoom",
+          "participant_type": "OUTPUT",
+          "passcode": "12345"
+        }
+      }
+    },
+    "schemas": {
+      "ValidatePasscodeRequest": {
+        "type": "object",
+        "properties": {
+          "room_name": {
+            "type": "string",
+            "example": "myRoom"
+          },
+          "participant_name": {
+            "type": "string",
+            "example": "user1"
+          },
+          "participant_type": {
+            "type": "string",
+            "example": "PERFORMER | CONTROL | OUTPUT"
+          },
+          "passcode": {
+            "type": "string",
+            "example": "12345"
+          }
+        },
+        "xml": {
+          "name": "ValidatePasscodeRequest"
+        }
+      },
+      "IncorrectPasscodeErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Incorrect passcode"
+          }
+        },
+        "xml": {
+          "name": "IncorrectPasscodeErrorResponse"
+        }
+      },
+      "RoomNotExistErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Room does not exist"
+          }
+        },
+        "xml": {
+          "name": "RoomNotExistErrorResponse"
+        }
+      },
+      "MaximumRoomErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Max 10 rooms allowed"
+          }
+        },
+        "xml": {
+          "name": "MaximumRoomErrorResponse"
+        }
+      },
+      "InvalidRoomErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid room name or passcode"
+          }
+        },
+        "xml": {
+          "name": "InvalidRoomErrorResponse"
         }
       }
     }
