@@ -1,14 +1,26 @@
-import { RequestHandler } from "express";
 import type { ErrorType, ApiPayload } from "@thegoodwork/ximi-types";
 import { createRoom } from "../controller/createRoom";
 import validator from "validator";
 const { isAlphanumeric, isNumeric } = validator;
 
-/*
+const createRoomHandler = async (req, res) => {
+  /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to create a new room'
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          $ref: '#/definitions/CreateRoomRequest'
+        },
+      }
+    }
+  }
   #swagger.responses[200] = {
     schema: {
+      status: 'success',
+      message: 'create room suuccess',
       token: '<token_value>'
     }
   }
@@ -30,19 +42,18 @@ const { isAlphanumeric, isNumeric } = validator;
   }
   #swagger.responses[500] = {
     schema: {
+      status: 'error',
       message: 'Internal server error'
     }
   }
   */
-
-const createRoomHandler: RequestHandler = async (req, res) => {
-  const successPayload: ApiPayload = {
-    status: "success",
-    message: "Success",
-  };
-
   try {
+    const successPayload: ApiPayload = {
+      status: "success",
+      message: "Create room success",
+    };
     const { name, passcode } = req.body;
+
     if (
       !isAlphanumeric(name) ||
       name.length > 10 ||
@@ -54,19 +65,22 @@ const createRoomHandler: RequestHandler = async (req, res) => {
     }
     const data = await createRoom(name.toUpperCase(), passcode);
 
-    successPayload.message = "Success";
     successPayload.data = data;
     return res.status(200).send(successPayload);
   } catch (e) {
-    let errorType: ErrorType = e.message;
-
+    const errorType: ErrorType = e.message;
     const errorPayload: ApiPayload = {
       status: "error",
       error: "",
     };
+
     switch (errorType) {
       case "ROOM_MAX": {
         errorPayload.error = "Max 10 rooms allowed";
+        return res.status(422).send(errorPayload);
+      }
+      case "ROOM_EXIST": {
+        errorPayload.error = "Room already exist";
         return res.status(422).send(errorPayload);
       }
       case "CREATE_ROOM_INVALID": {
