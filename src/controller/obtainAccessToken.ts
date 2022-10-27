@@ -1,6 +1,7 @@
+/*
 import { AccessToken } from "livekit-server-sdk";
 import type { AccessToken as TAccessToken } from "livekit-server-sdk";
-import { XIMI } from "../../types/room";
+import { Participant } from "@thegoodwork/ximi-types";
 import { config } from "dotenv";
 import { roomServiceClient } from "../util/livekitClient";
 
@@ -14,7 +15,7 @@ const obtainAccessToken = async ({
 }: {
   roomName: string;
   participantName: string;
-  participantType: XIMI.Participant["type"];
+  participantType: Participant["type"];
   action: "createRoom" | "joinRoom" | "joinRoomControl";
 }): Promise<{ err: Error } | { accessToken: TAccessToken }> => {
   if (action === "createRoom" && participantType === "control") {

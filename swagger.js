@@ -4,7 +4,7 @@ const packageJson = require("./package.json");
 const swaggerAutogen = require("swagger-autogen")({ openapi: "3.0.0" });
 
 const outputFile = "./swagger_output.json";
-const endpointsFiles = ["./src/app.ts"];
+const endpointsFiles = ["./src/app.ts", "./src/routes/*.ts"];
 
 const doc = {
   info: {

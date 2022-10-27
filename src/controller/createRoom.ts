@@ -5,10 +5,10 @@ import {
   roomServiceClient,
 } from "../util/livekitClient";
 import { Room } from "@thegoodwork/ximi-types";
-import { ErrorTypeResponse } from "@thegoodwork/ximi-types";
+import { ErrorType } from "@thegoodwork/ximi-types";
 
 const createRoom = async (roomName: string, passcode: string) => {
-  let errorType: ErrorTypeResponse;
+  let errorType: ErrorType;
   const controllerId = "CONTROL-" + roomName + "-1";
   const room: Room = {
     name: roomName,

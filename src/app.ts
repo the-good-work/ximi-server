@@ -3,24 +3,25 @@ import bodyParser from "body-parser";
 import { config } from "dotenv";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
-import { ErrorTypeResponse, Participant } from "@thegoodwork/ximi-types";
+import { ErrorType, Participant } from "@thegoodwork/ximi-types";
 
-import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
 import { checkPasscode } from "./controller/checkPasscode";
 import { webhookHandler } from "./controller/webhookHandler";
-import validator from "validator";
 
-const { isAlphanumeric, isNumeric } = validator;
+import { createRoomHandler } from "./routes/create-room";
+
+import validator from "validator";
+const { isAlphanumeric } = validator;
 
 config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 let response;
-let errorType: ErrorTypeResponse;
+let errorType: ErrorType;
 
 app.use(
   cors({
@@ -52,71 +53,7 @@ app.use(
   swaggerUi.setup(require("../swagger_output.json"))
 );
 
-app.post("/rooms/create", async (req, res) => {
-  /*
-  #swagger.tags = ['Rooms']
-  #swagger.description = 'Send a request to create a new room'
-  #swagger.responses[200] = {
-    schema: {
-      token: '<token_value>'
-    }
-  }
-  #swagger.responses[422] = {
-    content: {
-      "application/json": {
-        schema: {
-          anyOf: [
-            {
-              $ref: '#/definitions/MaximumRoomErrorResponse'
-            },
-            {
-              $ref: '#/definitions/InvalidRoomErrorResponse'
-            }
-          ]
-        }
-      }
-    }
-  }
-  #swagger.responses[500] = {
-    schema: {
-      message: 'Internal server error'
-    }
-  }
-  */
-
-  try {
-    const { name, passcode } = req.body;
-    if (
-      !isAlphanumeric(name) ||
-      name.length > 10 ||
-      !isNumeric(passcode) ||
-      passcode.length != 5
-    ) {
-      errorType = "CREATE_ROOM_INVALID";
-      throw Error(errorType);
-    }
-    const data = await createRoom(name.toUpperCase(), passcode);
-
-    return res.status(200).send(data);
-  } catch (e) {
-    errorType = e.message;
-    switch (errorType) {
-      case "ROOM_MAX": {
-        response = { message: "Max 10 rooms allowed" };
-        return res.status(422).send(response);
-      }
-      case "CREATE_ROOM_INVALID": {
-        response = { message: "Invalid room name or passcode" };
-        return res.status(422).send(response);
-      }
-      default: {
-        console.log(e);
-        response = { message: "Internal server error" };
-        return res.status(500).send(response);
-      }
-    }
-  }
-});
+app.post("/rooms/create", createRoomHandler);
 
 app.get("/rooms/list", async (_req, res) => {
   /*
@@ -268,6 +205,7 @@ app.post("/rooms/validate-passcode", async (req, res) => {
       }
       case "ROOM_NOT_EXIST": {
         response = { message: "Room does not exist" };
+
         return res.status(422).send(response);
       }
       default:
