@@ -16,7 +16,6 @@ config();
 
 const app = express();
 const port = 3000;
-const swaggerFile = require("../swagger_output.json");
 // const str = require("string-validator");
 
 let response;
@@ -46,7 +45,11 @@ app.use(bodyParser.raw({ verify: rawBodySaver, type: "*/*" }));
 
 app.post("/livekit-webhook", webhookHandler);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(require("../swagger_output.json"))
+);
 
 app.post("/rooms/create", async (req, res) => {
   /*
