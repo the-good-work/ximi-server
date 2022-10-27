@@ -2,21 +2,22 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import { ErrorTypeResponse, Participant } from "@thegoodwork/ximi-types";
+
 import { createRoom } from "./controller/createRoom";
 import { listRoom } from "./controller/listRoom";
 import { checkName } from "./controller/checkName";
-import { ErrorTypeResponse, Participant } from "@thegoodwork/ximi-types";
 import { checkPasscode } from "./controller/checkPasscode";
 import { webhookHandler } from "./controller/webhookHandler";
-import { checkAlphanumeric, checkNumeric } from "./util/validator";
+import validator from "validator";
 
-import swaggerUi from "swagger-ui-express";
+const { isAlphanumeric, isNumeric } = validator;
 
 config();
 
 const app = express();
 const port = 3000;
-// const str = require("string-validator");
 
 let response;
 let errorType: ErrorTypeResponse;
@@ -86,9 +87,9 @@ app.post("/rooms/create", async (req, res) => {
   try {
     const { name, passcode } = req.body;
     if (
-      !checkAlphanumeric(name) ||
+      !isAlphanumeric(name) ||
       name.length > 10 ||
-      !checkNumeric(passcode) ||
+      !isNumeric(passcode) ||
       passcode.length != 5
     ) {
       errorType = "CREATE_ROOM_INVALID";
@@ -170,7 +171,7 @@ app.post("/rooms/validate-name", async (req, res) => {
   */
   try {
     const { name } = req.body;
-    if (!checkAlphanumeric(name) || name.length > 5) {
+    if (!isAlphanumeric(name) || name.length > 5) {
       errorType = "PARTICIPANT_NAME_INVALID";
       throw Error(errorType);
     }
