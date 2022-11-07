@@ -24,6 +24,13 @@ const doc = {
     },
   ],
   definitions: {
+    CreateRoomRequest: {
+      name: "myRoom",
+      passcode: "12345"
+    },
+    ValidateNameRequest: {
+      name: "user1"
+    },
     ValidatePasscodeRequest: {
       room_name: "myRoom",
       participant_name: "user1",
@@ -31,16 +38,20 @@ const doc = {
       passcode: "12345",
     },
     IncorrectPasscodeErrorResponse: {
-      message: "Incorrect passcode",
+      status: "error",
+      error: "Incorrect passcode",
     },
     RoomNotExistErrorResponse: {
-      message: "Room does not exist",
+      status: "error",
+      error: "Room does not exist",
     },
     MaximumRoomErrorResponse: {
-      message: "Max 10 rooms allowed",
+      status: "error",
+      error: "Max 10 rooms allowed",
     },
     InvalidRoomErrorResponse: {
-      message: "Invalid room name or passcode",
+      status: "error",
+      error: "Invalid room name or passcode",
     },
   },
   components: {

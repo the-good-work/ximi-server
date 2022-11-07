@@ -1,7 +1,11 @@
 import { RoomServiceClient, AccessToken } from "livekit-server-sdk";
 import type { VideoGrant, AccessTokenOptions } from "livekit-server-sdk";
 import { config } from "dotenv";
-import { Participant } from "@thegoodwork/ximi-types";
+import {
+  Participant,
+  ParticipantMetadata,
+  UpdateStatePayload,
+} from "@thegoodwork/ximi-types";
 
 config();
 
@@ -28,6 +32,7 @@ export async function generateToken(
 ) {
   let tokenPermission: VideoGrant;
   let tokenOptions: AccessTokenOptions;
+  let metadata: ParticipantMetadata;
   if (type === "CONTROL") {
     tokenPermission = {
       roomCreate: true,
@@ -35,13 +40,20 @@ export async function generateToken(
       roomList: true,
       roomAdmin: true,
     };
+    metadata.type = type;
+  } else if (type === "OUTPUT") {
+    tokenPermission = {
+      roomJoin: true,
+    };
+    metadata.type = type;
   } else if (type === "PERFORMER") {
     tokenPermission = {
       roomJoin: true,
     };
+    metadata.type = type;
   }
   tokenPermission.room = roomName;
-  tokenOptions = { identity, metadata: type };
+  tokenOptions = { identity, metadata: JSON.stringify(metadata) };
 
   const token = new AccessToken(
     process.env.LIVEKIT_API_KEY,
@@ -53,9 +65,10 @@ export async function generateToken(
   return token.toJwt();
 }
 
-// export async function webhookReceiver(req: any) {
-//   const event = receiver.receive(req.body, req.get("Authorization"));
-//   console.log("event payload: ", event);
+export async function publishState(room: string, data: UpdateStatePayload) {
+  const encoder = new TextEncoder();
+  const payload = encoder.encode(JSON.stringify(data));
+  console.log("payload: ", payload);
 
-//   return event;
-// }
+  roomServiceClient.sendData(room, payload, 0);
+}

@@ -24,9 +24,9 @@ const checkPasscode = async (params: {
     params.participant_name = "CONTROL" + count.toString();
     room.controlCount = count;
   } else if (params.participant_type === "OUTPUT") {
-    let count = room.outputCount;
-    params.participant_name = "OUTPUT" + (count + 1).toString();
-    room.controlCount = count;
+    let count = room.outputCount + 1;
+    params.participant_name = "OUTPUT" + count.toString();
+    room.outputCount = count;
   }
 
   const token = await generateToken(
