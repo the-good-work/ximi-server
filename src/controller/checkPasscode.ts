@@ -1,4 +1,4 @@
-import { getRoom } from "../util/redisClient";
+import { getRoom, storeRoom } from "../util/redisClient";
 import { generateToken } from "../util/livekitClient";
 import { Participant } from "@thegoodwork/ximi-types";
 
@@ -31,6 +31,7 @@ const checkPasscode = async (params: {
       "OUTPUT-" + params.room_name + "-" + count.toString();
     room.outputCount = count;
   }
+  await storeRoom(params.room_name, room);
 
   const data = {
     roomName: params.room_name,
