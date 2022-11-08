@@ -40,17 +40,17 @@ export async function generateToken(
       roomList: true,
       roomAdmin: true,
     };
-    metadata.type = type;
-  } else if (type === "OUTPUT") {
-    tokenPermission = {
-      roomJoin: true,
-    };
-    metadata.type = type;
+    metadata = { type: type };
+    // } else if (type === "OUTPUT") {
+    //   tokenPermission = {
+    //     roomJoin: true,
+    //   };
+    //   metadata = { type: type };
   } else if (type === "PERFORMER") {
     tokenPermission = {
       roomJoin: true,
     };
-    metadata.type = type;
+    metadata = { type: type };
   }
   tokenPermission.room = roomName;
   tokenOptions = { identity, metadata: JSON.stringify(metadata) };
