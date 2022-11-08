@@ -8,7 +8,7 @@ import { checkPasscode } from "../controller/checkPasscode";
 const validatePasscodeHandler = async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
-  #swagger.description = 'Send a request to validate room passcode for joining a room'
+  #swagger.description = 'Send a request to validate room passcode for joining a room. If the passcodeis correct, it will generate token with type\'s metadata'
   #swagger.requestBody = {
     required: true,
     content: {
@@ -64,6 +64,7 @@ const validatePasscodeHandler = async (req, res) => {
       room_name: string;
       participant_name?: string;
       participant_type: Participant["type"];
+      performer_target?: string;
       passcode: string;
     } = {
       ...req.body,

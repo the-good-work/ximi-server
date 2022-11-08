@@ -19,41 +19,46 @@ export const roomServiceClient = svc;
 
 export async function checkRoom(roomName: string) {
   const existingRooms = await roomServiceClient.listRooms();
+  console.log(existingRooms);
   const hasMatchingRoom =
     existingRooms.findIndex((room) => {
       return room.name === roomName;
     }) > 0;
   return hasMatchingRoom;
 }
-export async function generateToken(
-  roomName: string,
-  type: Participant["type"],
-  identity: string
-) {
+export async function generateToken(data: {
+  roomName: string;
+  type: Participant["type"];
+  identity: string;
+  performer_target?: string;
+}) {
   let tokenPermission: VideoGrant;
   let tokenOptions: AccessTokenOptions;
   let metadata: ParticipantMetadata;
-  if (type === "CONTROL") {
+  if (data.type === "CONTROL") {
     tokenPermission = {
       roomCreate: true,
       roomJoin: true,
       roomList: true,
       roomAdmin: true,
     };
-    metadata = { type: type };
-    // } else if (type === "OUTPUT") {
-    //   tokenPermission = {
-    //     roomJoin: true,
-    //   };
-    //   metadata = { type: type };
-  } else if (type === "PERFORMER") {
+    metadata = { type: data.type };
+  } else if (data.type === "OUTPUT") {
     tokenPermission = {
       roomJoin: true,
     };
-    metadata = { type: type };
+    metadata = { type: data.type, target: data.performer_target };
+  } else if (data.type === "PERFORMER") {
+    tokenPermission = {
+      roomJoin: true,
+    };
+    metadata = { type: data.type };
   }
-  tokenPermission.room = roomName;
-  tokenOptions = { identity, metadata: JSON.stringify(metadata) };
+  tokenPermission.room = data.roomName;
+  tokenOptions = {
+    identity: data.identity,
+    metadata: JSON.stringify(metadata),
+  };
 
   const token = new AccessToken(
     process.env.LIVEKIT_API_KEY,

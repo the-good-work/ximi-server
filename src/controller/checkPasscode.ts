@@ -6,6 +6,7 @@ const checkPasscode = async (params: {
   room_name: string;
   participant_type: Participant["type"];
   participant_name?: string;
+  performer_target?: string;
   passcode: string;
 }) => {
   const room = await getRoom(params.room_name);
@@ -21,19 +22,23 @@ const checkPasscode = async (params: {
 
   if (params.participant_type === "CONTROL") {
     let count = room.controlCount + 1;
-    params.participant_name = "CONTROL" + count.toString();
+    params.participant_name =
+      "CONTROL-" + params.room_name + "-" + count.toString();
     room.controlCount = count;
   } else if (params.participant_type === "OUTPUT") {
     let count = room.outputCount + 1;
-    params.participant_name = "OUTPUT" + count.toString();
+    params.participant_name =
+      "OUTPUT-" + params.room_name + "-" + count.toString();
     room.outputCount = count;
   }
 
-  const token = await generateToken(
-    params.room_name,
-    params.participant_type,
-    params.participant_name
-  );
+  const data = {
+    roomName: params.room_name,
+    type: params.participant_type,
+    identity: params.participant_name,
+    performer_target: params.performer_target,
+  };
+  const token = await generateToken(data);
 
   return token;
 };

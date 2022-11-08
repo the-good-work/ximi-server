@@ -70,6 +70,7 @@ const doc = {
       ValidatePasscodeOutputRequest: {
         room_name: "myRoom",
         participant_type: "OUTPUT",
+        performer_target: "user1",
         passcode: "12345",
       },
     },
