@@ -4,7 +4,7 @@ import {
   generateToken,
   roomServiceClient,
 } from "../util/livekitClient";
-import { Room } from "@thegoodwork/ximi-types";
+import { Participant, Room } from "@thegoodwork/ximi-types";
 import { ErrorType } from "@thegoodwork/ximi-types";
 
 const createRoom = async (roomName: string, passcode: string) => {
@@ -30,7 +30,16 @@ const createRoom = async (roomName: string, passcode: string) => {
 
   await roomServiceClient.createRoom({ name: roomName });
   await storeRoom(roomName, room);
-  const token = await generateToken(roomName, "CONTROL", controllerId);
+  const data: {
+    roomName: string;
+    type: Participant["type"];
+    identity: string;
+  } = {
+    roomName: roomName,
+    type: "CONTROL",
+    identity: controllerId,
+  };
+  const token = await generateToken(data);
 
   return {
     token,

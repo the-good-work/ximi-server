@@ -32,7 +32,10 @@ const livekitWebhookHandler: RequestHandler = async (req, res) => {
       status: "success",
       message: "Webhook event triggered success",
     };
-    const result = receiver.receive(req.body, req.headers.authorization);
+    const result = receiver.receive(
+      (req as any).rawBody,
+      req.headers.authorization
+    );
     console.log("livekit event: ", { result });
 
     await livekitWebhook(result);
