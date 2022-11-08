@@ -8,6 +8,7 @@ import { listRoomHandler } from "./routes/list-room";
 import { validateNameHandler } from "./routes/validate-name";
 import { validatePasscodeHandler } from "./routes/validate-passcode";
 import { livekitWebhookHandler } from "./routes/livekit-webhook";
+import { retrieveRoomHandler } from "./routes/retrieve-room";
 
 config();
 
@@ -51,6 +52,8 @@ app.get("/rooms/list", listRoomHandler);
 app.post("/rooms/validate-name", validateNameHandler);
 
 app.post("/rooms/validate-passcode", validatePasscodeHandler);
+
+app.post("/rooms/retrieve-room", retrieveRoomHandler);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
