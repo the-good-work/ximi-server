@@ -24,16 +24,20 @@ const doc = {
     },
   ],
   definitions: {
+    RetrieveRoomRequest: {
+      room_name: "MYROOM",
+      participant_name: "USER1"
+    },
     CreateRoomRequest: {
-      name: "myRoom",
+      name: "MYROOM",
       passcode: "12345"
     },
     ValidateNameRequest: {
-      name: "user1"
+      name: "USER1"
     },
     ValidatePasscodeRequest: {
-      room_name: "myRoom",
-      participant_name: "user1",
+      room_name: "MYROOM",
+      participant_name: "USER1",
       participant_type: "PERFORMER | CONTROL | OUTPUT",
       passcode: "12345",
     },
@@ -57,20 +61,20 @@ const doc = {
   components: {
     examples: {
       ValidatePasscodePerformerRequest: {
-        room_name: "myRoom",
-        participant_name: "user1",
+        room_name: "MYROOM",
+        participant_name: "USER1",
         participant_type: "PERFORMER",
         passcode: "12345",
       },
       ValidatePasscodeControlRequest: {
-        room_name: "myRoom",
+        room_name: "MYROOM",
         participant_type: "CONTROL",
         passcode: "12345",
       },
       ValidatePasscodeOutputRequest: {
-        room_name: "myRoom",
+        room_name: "MYROOM",
         participant_type: "OUTPUT",
-        performer_target: "user1",
+        performer_target: "USER1",
         passcode: "12345",
       },
     },

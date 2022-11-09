@@ -1,6 +1,6 @@
 import { WebhookReceiver } from "livekit-server-sdk";
 import { RequestHandler } from "express";
-import { livekitWebhook } from "../controller/livekitWehook";
+import { livekitWebhook } from "../controller/livekitWebhook";
 import { ApiPayload, ErrorType } from "@thegoodwork/ximi-types";
 
 const livekitWebhookHandler: RequestHandler = async (req, res) => {
