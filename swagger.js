@@ -60,6 +60,34 @@ const doc = {
   },
   components: {
     examples: {
+      ApplySettingMuteRequest: {
+        type : "MUTE_AUDIO",
+        room_name: "MYROOM",
+        participant: "USER1",
+        target: "USER2",
+      },
+      ApplySettingUnmuteRequest: {
+        type : "UNMUTE_AUDIO",
+        room_name: "MYROOM",
+        participant: "USER1",
+        target: "USER2",
+      },
+      ApplySettingDelayRequest: {
+        type : "UPDATE_DELAY",
+        room_name: "MYROOM",
+        participant: "USER1",
+        delay: 0,
+      },
+      ApplySettingLayoutRequest: {
+        type : "UPDATE_LAYOUT",
+        room_name: "MYROOM",
+        layout: "Default",
+        slots: [{
+          nickname: "slot1",
+          size: { x: 0, y: 0 },
+          position: { x: 0, y: 0 },
+        }],
+      },
       ValidatePasscodePerformerRequest: {
         room_name: "MYROOM",
         participant_name: "USER1",

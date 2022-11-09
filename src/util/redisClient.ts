@@ -10,7 +10,7 @@ export async function storeRoom(roomName: string, room: Room) {
   redis.set(roomName, JSON.stringify(room));
 }
 
-export async function getRoom(roomName: string) {
+export async function getRoom(roomName: string): Promise<Room> {
   const roomData = JSON.parse(await redis.get(roomName));
 
   return roomData;
