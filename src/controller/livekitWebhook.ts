@@ -19,7 +19,6 @@ const livekitWebhook = async (data) => {
       let updatePayload: UpdateStatePayload;
       let participantData: Participant;
       if (participantType === "CONTROL") {
-        room.controlCount = room.controlCount++;
         participantData = {
           name: data.participant.identity,
           type: participantType,
@@ -76,9 +75,9 @@ const livekitWebhook = async (data) => {
         (participant: any) => participant.name !== data.participant.identity
       );
       if (participantType === "CONTROL") {
-        room.controlCount = room.controlCount--;
+        room.controlCount = room.controlCount - 1;
       } else if (participantType === "OUTPUT") {
-        room.outputCount = room.outputCount--;
+        room.outputCount = room.outputCount - 1;
       }
 
       console.log("room data: ", room);
