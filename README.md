@@ -5,6 +5,10 @@
 1. Docker
 2. Run on ubuntu/debian, not compatible with Mac OS due to networking
 
+## Developing
+
+To test the server against a local instance of `livekit-server`, first do `brew install livekit` (macOS). You can then run `livekit-server --dev --config ./livekit.yaml` where ./livekit.yaml is the path to the config yaml.
+
 ## Deploying
 
 > n.b. see if step 1 can be replaced by a shell script to scaffold just the config files
