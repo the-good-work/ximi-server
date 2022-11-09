@@ -7,6 +7,10 @@ import {
 
 const applySetting = async (params: RoomUpdateAction) => {
   const room = await getRoom(params.room_name);
+  if (!room) {
+    throw Error("ROOM_NOT_EXIST");
+  }
+
   const participantData = room.participants.find(
     (participant: Participant) => participant.name === params.participant
   ) as ParticipantPerformer;
@@ -17,7 +21,9 @@ const applySetting = async (params: RoomUpdateAction) => {
       break;
     }
     case "UNMUTE_AUDIO": {
-      participantData.audioMixMute.filter((name) => name !== params.target);
+      participantData.audioMixMute = participantData.audioMixMute.filter(
+        (name) => name !== params.target
+      );
       break;
     }
     case "UPDATE_DELAY": {
@@ -26,6 +32,7 @@ const applySetting = async (params: RoomUpdateAction) => {
     }
     case "UPDATE_LAYOUT": {
       participantData.video.layout = params.layout;
+      participantData.video.slots = params.slots;
       break;
     }
   }

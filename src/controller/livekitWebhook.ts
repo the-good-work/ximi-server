@@ -35,7 +35,7 @@ const livekitWebhook = async (data) => {
         participantData = {
           name: data.participant.identity,
           type: participantType,
-          audioMixMute: [""],
+          audioMixMute: [],
           audioOutDelay: 0,
           video: {
             slots: [
@@ -64,15 +64,15 @@ const livekitWebhook = async (data) => {
       }
       await publishState(room.name, updatePayload);
 
-      console.log("room data: ", room);
       await storeRoom(roomName, room);
       break;
     }
     case "participant_left": {
       const metadata = JSON.parse(data.participant.metadata);
       const participantType = metadata.type;
-      room.participants.filter(
-        (participant: any) => participant.name !== data.participant.identity
+      room.participants = room.participants.filter(
+        (participant: Participant) =>
+          participant.name !== data.participant.identity
       );
       if (participantType === "CONTROL") {
         room.controlCount = room.controlCount - 1;
@@ -80,7 +80,6 @@ const livekitWebhook = async (data) => {
         room.outputCount = room.outputCount - 1;
       }
 
-      console.log("room data: ", room);
       await storeRoom(roomName, room);
       break;
     }

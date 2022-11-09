@@ -35,6 +35,12 @@ const applySettingHandler = async (req, res) => {
   #swagger.responses[500] = {
     schema: {
       status: 'error',
+      message: 'Room does not exist'
+    }
+  }
+  #swagger.responses[500] = {
+    schema: {
+      status: 'error',
       message: 'Internal server error'
     }
   }

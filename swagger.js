@@ -81,6 +81,7 @@ const doc = {
       ApplySettingLayoutRequest: {
         type : "UPDATE_LAYOUT",
         room_name: "MYROOM",
+        participant: "USER1",
         layout: "Default",
         slots: [{
           nickname: "slot1",
