@@ -19,7 +19,6 @@ export const roomServiceClient = svc;
 
 export async function checkRoom(roomName: string) {
   const existingRooms = await roomServiceClient.listRooms();
-  console.log(existingRooms);
   const hasMatchingRoom =
     existingRooms.findIndex((room) => {
       return room.name === roomName;
@@ -73,7 +72,6 @@ export async function generateToken(data: {
 export async function publishState(room: string, data: UpdateStatePayload) {
   const encoder = new TextEncoder();
   const payload = encoder.encode(JSON.stringify(data));
-  console.log("payload: ", payload);
 
   roomServiceClient.sendData(room, payload, 0);
 }
