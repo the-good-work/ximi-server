@@ -1,19 +1,24 @@
 import { deleteRoom, getRoom, storeRoom } from "../util/redisClient";
 import { publishState } from "../util/livekitClient";
-import { Participant, UpdateStatePayload } from "@thegoodwork/ximi-types";
+import {
+  Participant,
+  ParticipantPerformer,
+  UpdateStatePayload,
+} from "@thegoodwork/ximi-types";
 
 const livekitWebhook = async (data) => {
   const roomName = data.room.name;
   const room = await getRoom(roomName);
-  const participantType = JSON.parse(data.participant.metadata).type;
-  console.log(participantType);
 
   switch (data.event) {
     case "participant_joined": {
+      const metadata = JSON.parse(data.participant.metadata);
+      const participantType = metadata.type;
+      const performerTarget = metadata.target;
+
       let updatePayload: UpdateStatePayload;
       let participantData: Participant;
       if (participantType === "CONTROL") {
-        room.controlCount = room.controlCount++;
         participantData = {
           name: data.participant.identity,
           type: participantType,
@@ -53,12 +58,10 @@ const livekitWebhook = async (data) => {
         };
         room.participants.push(participantData);
 
-        const performerTarget = JSON.parse(data.participant.metadata).target;
         updatePayload = room.participants.find(
           (participant: Participant) => participant.name === performerTarget
-        );
+        ) as ParticipantPerformer;
       }
-      console.log(updatePayload);
       await publishState(room.name, updatePayload);
 
       console.log("room data: ", room);
@@ -66,13 +69,15 @@ const livekitWebhook = async (data) => {
       break;
     }
     case "participant_left": {
+      const metadata = JSON.parse(data.participant.metadata);
+      const participantType = metadata.type;
       room.participants.filter(
         (participant: any) => participant.name !== data.participant.identity
       );
       if (participantType === "CONTROL") {
-        room.controlCount = room.controlCount;
+        room.controlCount = room.controlCount - 1;
       } else if (participantType === "OUTPUT") {
-        room.outputCount = room.outputCount;
+        room.outputCount = room.outputCount - 1;
       }
 
       console.log("room data: ", room);

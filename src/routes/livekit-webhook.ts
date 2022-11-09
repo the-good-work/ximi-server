@@ -25,7 +25,6 @@ const livekitWebhookHandler: RequestHandler = async (req, res) => {
     process.env.LIVEKIT_API_KEY,
     process.env.LIVEKIT_API_SECRET
   );
-  console.log((req as any).rawBody);
 
   try {
     const successPayload: ApiPayload = {
@@ -51,7 +50,6 @@ const livekitWebhookHandler: RequestHandler = async (req, res) => {
     switch (errorType) {
       default:
         console.log(e);
-
         errorPayload.error = "Internal server error";
         return res.status(500).send(errorPayload);
     }
