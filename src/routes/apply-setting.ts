@@ -3,10 +3,7 @@ import type {
   ApiPayload,
   RoomUpdateAction,
 } from "@thegoodwork/ximi-types";
-import { createRoom } from "../controller/createRoom";
-import validator from "validator";
 import { applySetting } from "../controller/applySetting";
-const { isAlphanumeric, isNumeric } = validator;
 
 const applySettingHandler = async (req, res) => {
   /*
