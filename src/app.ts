@@ -10,6 +10,7 @@ import { validatePasscodeHandler } from "./routes/validate-passcode";
 import { livekitWebhookHandler } from "./routes/livekit-webhook";
 import { retrieveRoomHandler } from "./routes/retrieve-room";
 import { applySettingHandler } from "./routes/apply-setting";
+import { editPresetHandler } from "./routes/edit-preset";
 
 config();
 
@@ -57,6 +58,8 @@ app.post("/rooms/validate-passcode", validatePasscodeHandler);
 app.post("/rooms/retrieve-room", retrieveRoomHandler);
 
 app.patch("/rooms/apply-setting", applySettingHandler);
+
+app.patch("/room/edit-preset", editPresetHandler);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
