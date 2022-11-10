@@ -4,6 +4,7 @@ import {
   ParticipantPerformer,
   RoomUpdateAction,
 } from "@thegoodwork/ximi-types";
+import { publishState } from "../util/livekitClient";
 
 const applySetting = async (params: RoomUpdateAction) => {
   const room = await getRoom(params.room_name);
@@ -36,6 +37,11 @@ const applySetting = async (params: RoomUpdateAction) => {
       break;
     }
   }
+
+  await publishState(room.name, "CONTROL");
+  await publishState(room.name, "PERFORMER", params.participant);
+  await publishState(room.name, "OUTPUT", params.participant);
+
   room.participants.forEach((participant: Participant, index) => {
     if (participant.name === params.participant) {
       room.participants[index] = participantData;

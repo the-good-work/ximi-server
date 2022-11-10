@@ -1,10 +1,6 @@
 import { deleteRoom, getRoom, storeRoom } from "../util/redisClient";
 import { publishState } from "../util/livekitClient";
-import {
-  Participant,
-  ParticipantPerformer,
-  UpdateStatePayload,
-} from "@thegoodwork/ximi-types";
+import { Participant } from "@thegoodwork/ximi-types";
 
 const livekitWebhook = async (data) => {
   const roomName = data.room.name;
@@ -14,25 +10,18 @@ const livekitWebhook = async (data) => {
     case "participant_joined": {
       const metadata = JSON.parse(data.participant.metadata);
       const participantType = metadata.type;
-      const performerTarget = metadata.target;
 
-      let updatePayload: UpdateStatePayload;
       let participantData: Participant;
       if (participantType === "CONTROL") {
         participantData = {
+          sid: data.participant.sid,
           name: data.participant.identity,
           type: participantType,
-        };
-        room.participants.push(participantData);
-        updatePayload = {
-          participants: room.participants,
-          audioCurrent: room.audioCurrent,
-          audioPresets: room.audioPresets,
-          layoutCurrent: room.layoutCurrent,
-          layoutPresets: room.layoutPresets,
+          audioMixMute: [],
         };
       } else if (participantType === "PERFORMER") {
         participantData = {
+          sid: data.participant.sid,
           name: data.participant.identity,
           type: participantType,
           audioMixMute: [],
@@ -40,7 +29,7 @@ const livekitWebhook = async (data) => {
           video: {
             slots: [
               {
-                nickname: "slot1",
+                nickname: data.participant.identity,
                 size: { x: 0, y: 0 },
                 position: { x: 0, y: 0 },
               },
@@ -48,23 +37,18 @@ const livekitWebhook = async (data) => {
             layout: "Default",
           },
         };
-        room.participants.push(participantData);
-        updatePayload = participantData;
       } else if (participantType === "OUTPUT") {
-        room.outputCount = room.outputCount++;
+        const outputTargetName = metadata.target;
         participantData = {
+          sid: data.participant.sid,
           name: data.participant.identity,
           type: participantType,
+          target: outputTargetName,
         };
-        room.participants.push(participantData);
-
-        updatePayload = room.participants.find(
-          (participant: Participant) => participant.name === performerTarget
-        ) as ParticipantPerformer;
       }
-      await publishState(room.name, updatePayload);
-
+      room.participants.push(participantData);
       await storeRoom(roomName, room);
+      await publishState(room.name, participantType, data.participant.identity);
       break;
     }
     case "participant_left": {

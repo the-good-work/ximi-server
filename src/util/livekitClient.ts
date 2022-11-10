@@ -4,8 +4,11 @@ import { config } from "dotenv";
 import {
   Participant,
   ParticipantMetadata,
+  ParticipantOutput,
+  ParticipantPerformer,
   UpdateStatePayload,
 } from "@thegoodwork/ximi-types";
+import { getRoom } from "./redisClient";
 
 config();
 
@@ -69,9 +72,66 @@ export async function generateToken(data: {
   return token.toJwt();
 }
 
-export async function publishState(room: string, data: UpdateStatePayload) {
-  const encoder = new TextEncoder();
-  const payload = encoder.encode(JSON.stringify(data));
+// export async function publishState(
+//   room: string,
+//   data: UpdateStatePayload,
+//   targetSid: string[]
+// ) {
+//   const encoder = new TextEncoder();
+//   const payload = encoder.encode(JSON.stringify(data));
 
-  roomServiceClient.sendData(room, payload, 0);
+//   roomServiceClient.sendData(room, payload, 1, targetSid);
+// }
+
+export async function publishState(
+  roomName: string,
+  type: Participant["type"],
+  participantName?: string
+) {
+  const room = await getRoom(roomName);
+
+  let targetSid: string[];
+  let updatePayload: UpdateStatePayload;
+
+  switch (type) {
+    // publish to all CONTROL
+    case "CONTROL": {
+      updatePayload = {
+        participants: room.participants,
+        currentSetting: room.currentSetting,
+        currentPreset: room.currentPreset,
+        presets: room.presets,
+      };
+      room.participants.forEach((participant) => {
+        if (participant.type === "CONTROL") {
+          targetSid.push(participant.sid);
+        }
+      });
+      break;
+    }
+    // publish to relevant PERFORMER only
+    case "PERFORMER": {
+      updatePayload = room.participants.find(
+        (participant: Participant) => participant.name === participantName
+      ) as ParticipantPerformer;
+      targetSid.push(updatePayload.sid);
+      break;
+    }
+    // publish to relevant OUTPUT only
+    case "OUTPUT": {
+      updatePayload = room.participants.find(
+        (participant: Participant) => participant.name === participantName
+      ) as ParticipantPerformer;
+      let outputData = room.participants.find(
+        (participant: any) => participant.target === participantName
+      ) as ParticipantOutput;
+      targetSid.push(outputData.sid);
+      break;
+    }
+  }
+
+  const encoder = new TextEncoder();
+  const payload = encoder.encode(JSON.stringify(updatePayload));
+
+  roomServiceClient.sendData(roomName, payload, 1, targetSid);
 }
