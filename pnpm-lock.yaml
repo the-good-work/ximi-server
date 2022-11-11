@@ -29,7 +29,7 @@ specifiers:
   validator: ^13.7.0
 
 dependencies:
-  '@thegoodwork/ximi-types': github.com/the-good-work/ximi-types/8e28d9591b2d41effaf3bf71fa256f0847968e8f
+  '@thegoodwork/ximi-types': github.com/the-good-work/ximi-types/0b5065524ae230a1dd0750ff25c776f204c8cfd8
   '@typescript-eslint/parser': 5.37.0_irgkl5vooow2ydyo6aokmferha
   body-parser: 1.20.1
   cors: 2.8.5
@@ -2468,8 +2468,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  github.com/the-good-work/ximi-types/8e28d9591b2d41effaf3bf71fa256f0847968e8f:
-    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/8e28d9591b2d41effaf3bf71fa256f0847968e8f}
+  github.com/the-good-work/ximi-types/0b5065524ae230a1dd0750ff25c776f204c8cfd8:
+    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/0b5065524ae230a1dd0750ff25c776f204c8cfd8}
     name: '@thegoodwork/ximi-types'
     version: 0.0.6
     dev: false

@@ -6,7 +6,6 @@ import {
   ParticipantMetadata,
   ParticipantOutput,
   ParticipantPerformer,
-  UpdateStatePayload,
 } from "@thegoodwork/ximi-types";
 import { getRoom } from "./redisClient";
 import { ServerUpdate } from "@thegoodwork/ximi-types/src/room";
