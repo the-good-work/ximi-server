@@ -79,7 +79,7 @@ export async function publishState(
 ) {
   const room = await getRoom(roomName);
 
-  let targetSid: string[] = [];
+  const targetSid: string[] = [];
   let updatePayload: ServerUpdate;
 
   switch (type) {
