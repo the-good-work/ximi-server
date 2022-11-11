@@ -38,6 +38,8 @@ const applySetting = async (params: RoomUpdateAction) => {
     }
   }
 
+  await storeRoom(params.room_name, room);
+
   await publishState(room.name, "CONTROL");
   await publishState(room.name, "PERFORMER", params.participant);
   await publishState(room.name, "OUTPUT", params.participant);
@@ -47,8 +49,6 @@ const applySetting = async (params: RoomUpdateAction) => {
       room.participants[index] = participantData;
     }
   });
-
-  await storeRoom(params.room_name, room);
 
   return;
 };

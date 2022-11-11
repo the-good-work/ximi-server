@@ -48,7 +48,11 @@ const livekitWebhook = async (data) => {
       }
       room.participants.push(participantData);
       await storeRoom(roomName, room);
+
       await publishState(room.name, participantType, data.participant.identity);
+      if (participantType !== "CONTROL") {
+        await publishState(room.name, "CONTROL");
+      }
       break;
     }
     case "participant_left": {
