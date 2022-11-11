@@ -9,6 +9,7 @@ import {
   UpdateStatePayload,
 } from "@thegoodwork/ximi-types";
 import { getRoom } from "./redisClient";
+import { ServerUpdate } from "@thegoodwork/ximi-types/src/room";
 
 config();
 
@@ -80,16 +81,19 @@ export async function publishState(
   const room = await getRoom(roomName);
 
   let targetSid: string[] = [];
-  let updatePayload: UpdateStatePayload;
+  let updatePayload: ServerUpdate;
 
   switch (type) {
     // publish to all CONTROL
     case "CONTROL": {
       updatePayload = {
-        participants: room.participants,
-        currentSetting: room.currentSetting,
-        currentPreset: room.currentPreset,
-        presets: room.presets,
+        type: "room-update",
+        update: {
+          participants: room.participants,
+          currentSetting: room.currentSetting,
+          currentPreset: room.currentPreset,
+          presets: room.presets,
+        },
       };
       room.participants.forEach((participant) => {
         if (participant.type === "CONTROL") {
@@ -100,17 +104,23 @@ export async function publishState(
     }
     // publish to relevant PERFORMER only
     case "PERFORMER": {
-      updatePayload = room.participants.find(
-        (participant: Participant) => participant.name === participantName
-      ) as ParticipantPerformer;
-      if (updatePayload) targetSid.push(updatePayload.sid);
+      updatePayload = {
+        type: "performer-update",
+        update: room.participants.find(
+          (participant: Participant) => participant.name === participantName
+        ) as ParticipantPerformer,
+      };
+      if (updatePayload) targetSid.push(updatePayload.update.sid);
       break;
     }
     // publish to relevant OUTPUT only
     case "OUTPUT": {
-      updatePayload = room.participants.find(
-        (participant: Participant) => participant.name === participantName
-      ) as ParticipantPerformer;
+      updatePayload = {
+        type: "performer-update",
+        update: room.participants.find(
+          (participant: Participant) => participant.name === participantName
+        ) as ParticipantPerformer,
+      };
       let outputData = room.participants.find(
         (participant: any) => participant.target === participantName
       ) as ParticipantOutput;
