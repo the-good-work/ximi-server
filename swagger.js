@@ -60,6 +60,36 @@ const doc = {
   },
   components: {
     examples: {
+      EditPresetSaveRequest: {
+        type: "SAVE_PRESET",
+        room_name: "MYROOM",
+        preset: {
+          index: 0,
+          name: "PRESET1",
+          participant: [{
+            sid: "<sid>",
+            name: "USER1",
+            type: "PERFORMER",
+            audioMixMute: [],
+            audioOutDelay: 0,
+            video: {
+              slots: [
+                {
+                  nickname: "USER1",
+                  size: { x: 0, y: 0 },
+                  position: { x: 0, y: 0 },
+                },
+              ],
+              layout: "Default",  
+            },
+          }],
+        }
+      },
+      EditPresetLoadRequest: {
+        type: "LOAD_PRESET",
+        room_name: "MYROOM",
+        index: 0
+      },
       ApplySettingMuteRequest: {
         type : "MUTE_AUDIO",
         room_name: "MYROOM",
