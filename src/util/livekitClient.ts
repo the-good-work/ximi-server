@@ -72,17 +72,6 @@ export async function generateToken(data: {
   return token.toJwt();
 }
 
-// export async function publishState(
-//   room: string,
-//   data: UpdateStatePayload,
-//   targetSid: string[]
-// ) {
-//   const encoder = new TextEncoder();
-//   const payload = encoder.encode(JSON.stringify(data));
-
-//   roomServiceClient.sendData(room, payload, 1, targetSid);
-// }
-
 export async function publishState(
   roomName: string,
   type: Participant["type"],
@@ -90,7 +79,7 @@ export async function publishState(
 ) {
   const room = await getRoom(roomName);
 
-  let targetSid: string[];
+  let targetSid: string[] = [];
   let updatePayload: UpdateStatePayload;
 
   switch (type) {
@@ -114,7 +103,7 @@ export async function publishState(
       updatePayload = room.participants.find(
         (participant: Participant) => participant.name === participantName
       ) as ParticipantPerformer;
-      targetSid.push(updatePayload.sid);
+      if (updatePayload) targetSid.push(updatePayload.sid);
       break;
     }
     // publish to relevant OUTPUT only
@@ -125,7 +114,7 @@ export async function publishState(
       let outputData = room.participants.find(
         (participant: any) => participant.target === participantName
       ) as ParticipantOutput;
-      targetSid.push(outputData.sid);
+      if (outputData) targetSid.push(outputData.sid);
       break;
     }
   }
