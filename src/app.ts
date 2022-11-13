@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import bodyParser, { json } from "body-parser";
+import bodyParser from "body-parser";
 import { config } from "dotenv";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";

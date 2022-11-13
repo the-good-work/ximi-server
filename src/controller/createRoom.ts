@@ -6,10 +6,13 @@ import {
 } from "../util/livekitClient";
 import { Participant, Room } from "@thegoodwork/ximi-types";
 import { ErrorType } from "@thegoodwork/ximi-types";
+import ShortUniqueId from "short-unique-id";
+
+const uid = new ShortUniqueId({ length: 5 });
 
 const createRoom = async (roomName: string, passcode: string) => {
   let errorType: ErrorType;
-  const controllerId = "CONTROL-" + roomName + "-1";
+  const controllerId = `CONTROL_${roomName}_${uid().toUpperCase()}`;
   const room: Room = {
     name: roomName,
     passcode,

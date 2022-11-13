@@ -20,6 +20,10 @@ const svc = new RoomServiceClient(
 
 export const roomServiceClient = svc;
 
+export async function listRooms() {
+  return await roomServiceClient.listRooms();
+}
+
 export async function checkRoom(roomName: string) {
   const existingRooms = await roomServiceClient.listRooms();
   const hasMatchingRoom =

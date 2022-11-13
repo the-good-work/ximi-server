@@ -1,6 +1,9 @@
 import { getRoom, storeRoom } from "../util/redisClient";
 import { generateToken } from "../util/livekitClient";
 import { Participant } from "@thegoodwork/ximi-types";
+import ShortUniqueId from "short-unique-id";
+
+const uid = new ShortUniqueId({ length: 5 });
 
 const checkPasscode = async (params: {
   room_name: string;
@@ -10,6 +13,8 @@ const checkPasscode = async (params: {
   passcode: string;
 }) => {
   const room = await getRoom(params.room_name);
+  console.log("a", { room }, room.participants.length);
+
   if (!room) {
     const type = "ROOM_NOT_EXIST";
     throw Error(type);
@@ -21,16 +26,15 @@ const checkPasscode = async (params: {
   }
 
   if (params.participant_type === "CONTROL") {
-    let count = room.controlCount + 1;
-    params.participant_name =
-      "CONTROL-" + params.room_name + "-" + count.toString();
-    room.controlCount = count;
+    params.participant_name = `CONTROL-${
+      params.room_name
+    }-${uid().toUpperCase()}`;
   } else if (params.participant_type === "OUTPUT") {
-    let count = room.outputCount + 1;
-    params.participant_name =
-      "OUTPUT-" + params.room_name + "-" + count.toString();
-    room.outputCount = count;
+    params.participant_name = `OUTPUT-${
+      params.room_name
+    }-${uid().toUpperCase()}`;
   }
+  console.log("b", { room }, room.participants.length);
   await storeRoom(params.room_name, room);
 
   const data = {

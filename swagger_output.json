@@ -14,7 +14,10 @@
   "paths": {
     "/livekit-webhook": {
       "post": {
-        "description": "",
+        "tags": [
+          "Webhook"
+        ],
+        "description": "Handle api request sent from livekit",
         "parameters": [
           {
             "name": "authorization",
@@ -27,38 +30,189 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Webhook event triggered success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Webhook event triggered success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/rooms/create": {
       "post": {
-        "description": "",
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to create a new room",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "create room suuccess"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "create room suuccess"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "<token_value>"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "422": {
-            "description": "Unprocessable Entity"
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MaximumRoomErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InvalidRoomErrorResponse"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "any"
-                  },
-                  "passcode": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/CreateRoomRequest"
               }
             }
           }
@@ -78,17 +232,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "room": {
-                        "type": "string",
-                        "example": "<room_name>"
-                      },
-                      "participants": {
-                        "type": "number",
-                        "example": 2
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get list room success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "room": {
+                            "type": "string",
+                            "example": "<room_name>"
+                          },
+                          "participants": {
+                            "type": "number",
+                            "example": 2
+                          }
+                        }
                       }
                     }
                   },
@@ -99,17 +266,30 @@
               },
               "application/xml": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "room": {
-                        "type": "string",
-                        "example": "<room_name>"
-                      },
-                      "participants": {
-                        "type": "number",
-                        "example": 2
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get list room success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "room": {
+                            "type": "string",
+                            "example": "<room_name>"
+                          },
+                          "participants": {
+                            "type": "number",
+                            "example": 2
+                          }
+                        }
                       }
                     }
                   },
@@ -127,7 +307,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -141,7 +325,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -169,13 +357,23 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "available": {
-                        "type": "boolean",
-                        "example": true
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validate name success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "available": {
+                          "type": "boolean",
+                          "example": true
+                        }
                       }
                     }
                   },
@@ -186,13 +384,23 @@
               },
               "application/xml": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "available": {
-                        "type": "boolean",
-                        "example": true
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validate name success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "available": {
+                          "type": "boolean",
+                          "example": true
+                        }
                       }
                     }
                   },
@@ -213,7 +421,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -227,7 +439,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -241,15 +457,11 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/ValidateNameRequest"
               }
             }
           }
@@ -261,7 +473,7 @@
         "tags": [
           "Rooms"
         ],
-        "description": "Send a request to validate room passcode for joining a room",
+        "description": "Send a request to validate room passcode for joining a room. If the passcodeis correct, it will generate token with type\\'s metadata",
         "parameters": [],
         "responses": {
           "200": {
@@ -271,6 +483,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validate passcode success"
+                    },
                     "token": {
                       "type": "string",
                       "example": "<token_value>"
@@ -285,6 +505,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validate passcode success"
+                    },
                     "token": {
                       "type": "string",
                       "example": "<token_value>"
@@ -321,7 +549,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -335,7 +567,11 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
                       "type": "string",
                       "example": "Internal server error"
                     }
@@ -351,7 +587,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "applciation/json": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ValidatePasscodeRequest"
               },
@@ -370,44 +606,690 @@
           }
         }
       }
+    },
+    "/rooms/retrieve-room": {
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to fetch the room state for performer participant",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get room state success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "USER1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "PERFORMER"
+                        },
+                        "audioMixMute": {
+                          "type": "array",
+                          "example": [
+                            ""
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "audioOutputDelay": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "video": {
+                          "type": "object",
+                          "properties": {
+                            "slots": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "nickname": {
+                                    "type": "string",
+                                    "example": "slot1"
+                                  },
+                                  "size": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "example": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "example": 0
+                                      }
+                                    }
+                                  },
+                                  "position": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "example": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "example": 0
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "layout": {
+                          "type": "string",
+                          "example": "Default"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get room state success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "USER1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "PERFORMER"
+                        },
+                        "audioMixMute": {
+                          "type": "array",
+                          "example": [
+                            ""
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "audioOutputDelay": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "video": {
+                          "type": "object",
+                          "properties": {
+                            "slots": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "nickname": {
+                                    "type": "string",
+                                    "example": "slot1"
+                                  },
+                                  "size": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "example": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "example": 0
+                                      }
+                                    }
+                                  },
+                                  "position": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "example": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "example": 0
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "layout": {
+                          "type": "string",
+                          "example": "Default"
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetrieveRoomRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/apply-setting": {
+      "patch": {
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to apply performer\\'s setting",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Apply setting success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Apply setting success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Room does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Room does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {},
+              "examples": {
+                "MUTE": {
+                  "$ref": "#/components/examples/ApplySettingMuteRequest"
+                },
+                "UNMUTE": {
+                  "$ref": "#/components/examples/ApplySettingUnmuteRequest"
+                },
+                "DELAY": {
+                  "$ref": "#/components/examples/ApplySettingDelayRequest"
+                },
+                "LAYOUT": {
+                  "$ref": "#/components/examples/ApplySettingLayoutRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/room/edit-preset": {
+      "patch": {
+        "tags": [
+          "Rooms"
+        ],
+        "description": "Send a request to save/load a preset",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Edit preset success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Edit preset success"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Room does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Room does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {},
+              "examples": {
+                "SAVE_PRESET": {
+                  "$ref": "#/components/examples/EditPresetSaveRequest"
+                },
+                "LOAD_PRESET": {
+                  "$ref": "#/components/examples/EditPresetLoadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "examples": {
+      "EditPresetSaveRequest": {
+        "value": {
+          "type": "SAVE_PRESET",
+          "room_name": "MYROOM",
+          "preset": {
+            "index": 0,
+            "name": "PRESET1",
+            "participant": [
+              {
+                "sid": "<sid>",
+                "name": "USER1",
+                "type": "PERFORMER",
+                "audioMixMute": [],
+                "audioOutDelay": 0,
+                "video": {
+                  "slots": [
+                    {
+                      "nickname": "USER1",
+                      "size": {
+                        "x": 0,
+                        "y": 0
+                      },
+                      "position": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    }
+                  ],
+                  "layout": "Default"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "EditPresetLoadRequest": {
+        "value": {
+          "type": "LOAD_PRESET",
+          "room_name": "MYROOM",
+          "index": 0
+        }
+      },
+      "ApplySettingMuteRequest": {
+        "value": {
+          "type": "MUTE_AUDIO",
+          "room_name": "MYROOM",
+          "participant": "USER1",
+          "target": "USER2"
+        }
+      },
+      "ApplySettingUnmuteRequest": {
+        "value": {
+          "type": "UNMUTE_AUDIO",
+          "room_name": "MYROOM",
+          "participant": "USER1",
+          "target": "USER2"
+        }
+      },
+      "ApplySettingDelayRequest": {
+        "value": {
+          "type": "UPDATE_DELAY",
+          "room_name": "MYROOM",
+          "participant": "USER1",
+          "delay": 0
+        }
+      },
+      "ApplySettingLayoutRequest": {
+        "value": {
+          "type": "UPDATE_LAYOUT",
+          "room_name": "MYROOM",
+          "participant": "USER1",
+          "layout": "Default",
+          "slots": [
+            {
+              "nickname": "slot1",
+              "size": {
+                "x": 0,
+                "y": 0
+              },
+              "position": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ]
+        }
+      },
       "ValidatePasscodePerformerRequest": {
         "value": {
-          "room_name": "myRoom",
-          "participant_name": "user1",
+          "room_name": "MYROOM",
+          "participant_name": "USER1",
           "participant_type": "PERFORMER",
           "passcode": "12345"
         }
       },
       "ValidatePasscodeControlRequest": {
         "value": {
-          "room_name": "myRoom",
+          "room_name": "MYROOM",
           "participant_type": "CONTROL",
           "passcode": "12345"
         }
       },
       "ValidatePasscodeOutputRequest": {
         "value": {
-          "room_name": "myRoom",
+          "room_name": "MYROOM",
           "participant_type": "OUTPUT",
+          "performer_target": "USER1",
           "passcode": "12345"
         }
       }
     },
     "schemas": {
+      "RetrieveRoomRequest": {
+        "type": "object",
+        "properties": {
+          "room_name": {
+            "type": "string",
+            "example": "MYROOM"
+          },
+          "participant_name": {
+            "type": "string",
+            "example": "USER1"
+          }
+        },
+        "xml": {
+          "name": "RetrieveRoomRequest"
+        }
+      },
+      "CreateRoomRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "MYROOM"
+          },
+          "passcode": {
+            "type": "string",
+            "example": "12345"
+          }
+        },
+        "xml": {
+          "name": "CreateRoomRequest"
+        }
+      },
+      "ValidateNameRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "USER1"
+          }
+        },
+        "xml": {
+          "name": "ValidateNameRequest"
+        }
+      },
       "ValidatePasscodeRequest": {
         "type": "object",
         "properties": {
           "room_name": {
             "type": "string",
-            "example": "myRoom"
+            "example": "MYROOM"
           },
           "participant_name": {
             "type": "string",
-            "example": "user1"
+            "example": "USER1"
           },
           "participant_type": {
             "type": "string",
@@ -425,7 +1307,11 @@
       "IncorrectPasscodeErrorResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "error": {
             "type": "string",
             "example": "Incorrect passcode"
           }
@@ -437,7 +1323,11 @@
       "RoomNotExistErrorResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "error": {
             "type": "string",
             "example": "Room does not exist"
           }
@@ -449,7 +1339,11 @@
       "MaximumRoomErrorResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "error": {
             "type": "string",
             "example": "Max 10 rooms allowed"
           }
@@ -461,7 +1355,11 @@
       "InvalidRoomErrorResponse": {
         "type": "object",
         "properties": {
-          "message": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "error": {
             "type": "string",
             "example": "Invalid room name or passcode"
           }

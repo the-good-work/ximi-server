@@ -35,7 +35,6 @@ const livekitWebhookHandler: RequestHandler = async (req, res) => {
       (req as any).rawBody,
       req.headers.authorization
     );
-    console.log("livekit event: ", { result });
 
     await livekitWebhook(result);
 

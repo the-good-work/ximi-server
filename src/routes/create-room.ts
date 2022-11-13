@@ -1,9 +1,11 @@
 import type { ErrorType, ApiPayload } from "@thegoodwork/ximi-types";
 import { createRoom } from "../controller/createRoom";
 import validator from "validator";
+import { RequestHandler } from "express";
+import { listRooms } from "../util/livekitClient";
 const { isAlphanumeric, isNumeric } = validator;
 
-const createRoomHandler = async (req, res) => {
+const createRoomHandler: RequestHandler = async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to create a new room'
@@ -63,6 +65,11 @@ const createRoomHandler = async (req, res) => {
       const error: ErrorType = "CREATE_ROOM_INVALID";
       throw Error(error);
     }
+    const rooms = await listRooms();
+    if (rooms.findIndex((room) => room.name === name) > -1) {
+      const error: ErrorType = "ROOM_EXIST";
+      throw Error(error);
+    }
     const data = await createRoom(name.toUpperCase(), passcode);
 
     successPayload.data = data;
@@ -80,7 +87,7 @@ const createRoomHandler = async (req, res) => {
         return res.status(422).send(errorPayload);
       }
       case "ROOM_EXIST": {
-        errorPayload.error = "Room already exist";
+        errorPayload.error = "Room already exists";
         return res.status(422).send(errorPayload);
       }
       case "CREATE_ROOM_INVALID": {

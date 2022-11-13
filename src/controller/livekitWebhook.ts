@@ -1,10 +1,17 @@
 import { deleteRoom, getRoom, storeRoom } from "../util/redisClient";
 import { publishState } from "../util/livekitClient";
 import { Participant } from "@thegoodwork/ximi-types";
+import { WebhookEvent } from "livekit-server-sdk/dist/proto/livekit_webhook";
 
-const livekitWebhook = async (data) => {
+const livekitWebhook = async (data: WebhookEvent) => {
   const roomName = data.room.name;
   const room = await getRoom(roomName);
+
+  if (data.event.indexOf("participant_") === 0) {
+    console.log(`webhook: ${data.event}\t${data.participant.identity}`);
+  } else {
+    console.log(`webhook: ${data.event}`);
+  }
 
   switch (data.event) {
     case "participant_joined": {
@@ -56,17 +63,10 @@ const livekitWebhook = async (data) => {
       break;
     }
     case "participant_left": {
-      const metadata = JSON.parse(data.participant.metadata);
-      const participantType = metadata.type;
-      room.participants = room.participants.filter(
+      room.participants = [...room.participants].filter(
         (participant: Participant) =>
           participant.name !== data.participant.identity
       );
-      if (participantType === "CONTROL") {
-        room.controlCount = room.controlCount - 1;
-      } else if (participantType === "OUTPUT") {
-        room.outputCount = room.outputCount - 1;
-      }
 
       await storeRoom(roomName, room);
       break;
