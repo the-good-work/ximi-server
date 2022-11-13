@@ -37,7 +37,7 @@ const livekitWebhook = async (data: WebhookEvent) => {
             slots: [
               {
                 nickname: data.participant.identity,
-                size: { x: 0, y: 0 },
+                size: { w: 1, h: 1 },
                 position: { x: 0, y: 0 },
               },
             ],

@@ -55,11 +55,6 @@ const validatePasscodeHandler = async (req, res) => {
   }
   */
   try {
-    const successPayload: ApiPayload = {
-      status: "success",
-      message: "Validate passcode success",
-    };
-
     let params: {
       room_name: string;
       participant_name?: string;
@@ -71,6 +66,11 @@ const validatePasscodeHandler = async (req, res) => {
       ...(req.body.participant_name && {
         participant_name: req.body.participant_name as string,
       }),
+    };
+
+    const successPayload: ApiPayload = {
+      status: "success",
+      message: "Validate passcode success",
     };
 
     successPayload.data = await checkPasscode(params);

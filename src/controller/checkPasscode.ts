@@ -13,7 +13,6 @@ const checkPasscode = async (params: {
   passcode: string;
 }) => {
   const room = await getRoom(params.room_name);
-  console.log("a", { room }, room.participants.length);
 
   if (!room) {
     const type = "ROOM_NOT_EXIST";
@@ -34,7 +33,9 @@ const checkPasscode = async (params: {
       params.room_name
     }-${uid().toUpperCase()}`;
   }
-  console.log("b", { room }, room.participants.length);
+
+  console.log(room.participants.map((p) => p.name));
+
   await storeRoom(params.room_name, room);
 
   const data = {

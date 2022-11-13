@@ -41,8 +41,11 @@ const applySetting = async (params: RoomUpdateAction) => {
   await storeRoom(params.room_name, room);
 
   await publishState(room.name, "CONTROL");
-  await publishState(room.name, "PERFORMER", params.participant);
-  await publishState(room.name, "OUTPUT", params.participant);
+
+  if (participantData.type === "PERFORMER") {
+    await publishState(room.name, "PERFORMER", params.participant);
+    await publishState(room.name, "OUTPUT", params.participant);
+  }
 
   room.participants.forEach((participant: Participant, index) => {
     if (participant.name === params.participant) {
