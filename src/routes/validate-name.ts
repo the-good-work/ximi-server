@@ -1,9 +1,11 @@
 import type { ErrorType, ApiPayload } from "@thegoodwork/ximi-types";
+import { RequestHandler } from "express";
 import validator from "validator";
 import { checkName } from "../controller/checkName";
+import { getAllParticipants } from "../util/livekitClient";
 const { isAlphanumeric } = validator;
 
-const validateNameHandler = async (req, res) => {
+const validateNameHandler: RequestHandler = async (req, res) => {
   /*
   #swagger.tags = ['Rooms']
   #swagger.description = 'Send a request to validate participant nickname availability'
@@ -44,6 +46,12 @@ const validateNameHandler = async (req, res) => {
       throw Error("PARTICIPANT_NAME_INVALID");
     }
 
+    const allParticipants = await getAllParticipants();
+
+    if (allParticipants.findIndex((p) => p.identity === name) > -1) {
+      throw Error("PARTICIPANT_NAME_EXIST");
+    }
+
     successPayload.data = { available: await checkName(name.toUpperCase()) };
     return res.status(200).send(successPayload);
   } catch (e) {
@@ -58,6 +66,12 @@ const validateNameHandler = async (req, res) => {
         errorPayload.error = "Invalid participant name";
         return res.status(422).send(errorPayload);
       }
+
+      case "PARTICIPANT_NAME_EXIST": {
+        errorPayload.error = "Participant name in use";
+        return res.status(422).send(errorPayload);
+      }
+
       default:
         console.log(e);
         errorPayload.error = "Internal server error";

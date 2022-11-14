@@ -24,6 +24,18 @@ export async function listRooms() {
   return await roomServiceClient.listRooms();
 }
 
+export async function getAllParticipants() {
+  const rooms = await listRooms();
+  const pAllParticipants = rooms.map((room) => {
+    return roomServiceClient.listParticipants(room.name);
+  });
+  const allParticipants = (await Promise.all(pAllParticipants)).reduce(
+    (p, c) => [...p, ...c],
+    []
+  );
+  return allParticipants;
+}
+
 export async function checkRoom(roomName: string) {
   const existingRooms = await roomServiceClient.listRooms();
   const hasMatchingRoom =
