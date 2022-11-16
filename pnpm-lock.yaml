@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@thegoodwork/ximi-types': github:the-good-work/ximi-types#47500c2b7edc404e3b528e0a06d8a02b7e76ae3e
+  '@thegoodwork/ximi-types': github:the-good-work/ximi-types#0cc9ce109f53139271e8e924b9f247afeffa649a
   '@types/body-parser': ^1.19.2
   '@types/cors': ^2.8.12
   '@types/express': 4.17.14
@@ -30,7 +30,7 @@ specifiers:
   validator: ^13.7.0
 
 dependencies:
-  '@thegoodwork/ximi-types': github.com/the-good-work/ximi-types/47500c2b7edc404e3b528e0a06d8a02b7e76ae3e
+  '@thegoodwork/ximi-types': github.com/the-good-work/ximi-types/0cc9ce109f53139271e8e924b9f247afeffa649a
   '@typescript-eslint/parser': 5.37.0_irgkl5vooow2ydyo6aokmferha
   body-parser: 1.20.1
   cors: 2.8.5
@@ -2475,8 +2475,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  github.com/the-good-work/ximi-types/47500c2b7edc404e3b528e0a06d8a02b7e76ae3e:
-    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/47500c2b7edc404e3b528e0a06d8a02b7e76ae3e}
+  github.com/the-good-work/ximi-types/0cc9ce109f53139271e8e924b9f247afeffa649a:
+    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/0cc9ce109f53139271e8e924b9f247afeffa649a}
     name: '@thegoodwork/ximi-types'
     version: 0.0.6
     dev: false
