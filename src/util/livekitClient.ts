@@ -1,4 +1,8 @@
-import { RoomServiceClient, AccessToken } from "livekit-server-sdk";
+import {
+  RoomServiceClient,
+  AccessToken,
+  DataPacket_Kind,
+} from "livekit-server-sdk";
 import type { VideoGrant, AccessTokenOptions } from "livekit-server-sdk";
 import { config } from "dotenv";
 import {
@@ -147,5 +151,10 @@ export async function publishState(
   const encoder = new TextEncoder();
   const payload = encoder.encode(JSON.stringify(updatePayload));
 
-  roomServiceClient.sendData(roomName, payload, 1, targetSid);
+  roomServiceClient.sendData(
+    roomName,
+    payload,
+    DataPacket_Kind.RELIABLE,
+    targetSid
+  );
 }
