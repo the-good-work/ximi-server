@@ -29,6 +29,14 @@ const editPreset = async (params: RoomPresetRequest) => {
 
   await storeRoom(params.room_name, room);
   await publishState(room.name, "CONTROL");
+  if (params.type === "LOAD_PRESET") {
+    await Promise.all(
+      room.participants
+        .filter((p) => p.type === "PERFORMER")
+        .map((p) => p.name)
+        .map((name) => publishState(room.name, "PERFORMER", name))
+    );
+  }
 
   return loadedPreset;
 };
