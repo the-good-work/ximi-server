@@ -19,9 +19,9 @@ const createRoom = async (roomName: string, passcode: string) => {
     participants: [],
     currentSetting: [],
     currentPreset: "",
-    presets: [],
-    controlCount: 1,
-    outputCount: 0,
+    presets: new Array(12)
+      .fill(0)
+      .map((_c, n) => ({ index: n, name: "", participants: [] })),
   };
 
   if (await checkRoom(roomName)) {
