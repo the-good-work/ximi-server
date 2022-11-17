@@ -26,14 +26,14 @@ const doc = {
   definitions: {
     RetrieveRoomRequest: {
       room_name: "MYROOM",
-      participant_name: "USER1"
+      participant_name: "USER1",
     },
     CreateRoomRequest: {
       name: "MYROOM",
-      passcode: "12345"
+      passcode: "12345",
     },
     ValidateNameRequest: {
-      name: "USER1"
+      name: "USER1",
     },
     ValidatePasscodeRequest: {
       room_name: "MYROOM",
@@ -66,58 +66,62 @@ const doc = {
         preset: {
           index: 0,
           name: "PRESET1",
-          participant: [{
-            sid: "<sid>",
-            name: "USER1",
-            type: "PERFORMER",
-            audioMixMute: [],
-            audioOutDelay: 0,
-            video: {
-              slots: [
-                {
-                  nickname: "USER1",
-                  size: { x: 0, y: 0 },
-                  position: { x: 0, y: 0 },
-                },
-              ],
-              layout: "Default",  
+          participants: [
+            {
+              sid: "<sid>",
+              name: "USER1",
+              type: "PERFORMER",
+              audioMixMute: [],
+              audioOutDelay: 0,
+              video: {
+                slots: [
+                  {
+                    nickname: "USER1",
+                    size: { x: 0, y: 0 },
+                    position: { x: 0, y: 0 },
+                  },
+                ],
+                layout: "Default",
+              },
             },
-          }],
-        }
+          ],
+        },
       },
       EditPresetLoadRequest: {
         type: "LOAD_PRESET",
         room_name: "MYROOM",
-        index: 0
+        index: 0,
       },
       ApplySettingMuteRequest: {
-        type : "MUTE_AUDIO",
+        type: "MUTE_AUDIO",
         room_name: "MYROOM",
         participant: "USER1",
         target: "USER2",
       },
       ApplySettingUnmuteRequest: {
-        type : "UNMUTE_AUDIO",
+        type: "UNMUTE_AUDIO",
         room_name: "MYROOM",
         participant: "USER1",
         target: "USER2",
       },
       ApplySettingDelayRequest: {
-        type : "UPDATE_DELAY",
+        type: "UPDATE_DELAY",
         room_name: "MYROOM",
         participant: "USER1",
         delay: 0,
       },
       ApplySettingLayoutRequest: {
-        type : "UPDATE_LAYOUT",
+        type: "UPDATE_LAYOUT",
         room_name: "MYROOM",
         participant: "USER1",
         layout: "Default",
-        slots: [{
-          nickname: "slot1",
-          size: { x: 0, y: 0 },
-          position: { x: 0, y: 0 },
-        }],
+        slots: [
+          {
+            nickname: "slot1",
+            size: { x: 0, y: 0 },
+            position: { x: 0, y: 0 },
+          },
+        ],
       },
       ValidatePasscodePerformerRequest: {
         room_name: "MYROOM",
