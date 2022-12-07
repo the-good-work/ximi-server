@@ -134,11 +134,21 @@ export async function publishState(
     }
     // publish to relevant OUTPUT only
     case "OUTPUT": {
+      const participantOutput = room.participants.find(
+        (participant: Participant) => participant.name === participantName
+      ) as ParticipantOutput;
+
+      const participantPerformer = room.participants.find(
+        (participant: Participant) =>
+          participant.name === participantOutput.target
+      ) as ParticipantPerformer;
+
       updatePayload = {
-        type: "performer-update",
-        update: room.participants.find(
-          (participant: Participant) => participant.name === participantName
-        ) as ParticipantPerformer,
+        type: "output-update",
+        update: {
+          output: participantOutput,
+          performer: participantPerformer,
+        },
       };
       let outputData = room.participants.find(
         (participant: any) => participant.target === participantName

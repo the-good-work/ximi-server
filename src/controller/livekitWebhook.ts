@@ -7,12 +7,6 @@ const livekitWebhook = async (data: WebhookEvent) => {
   const roomName = data.room.name;
   const room = await getRoom(roomName);
 
-  if (data.event.indexOf("participant_") === 0) {
-    console.log(`webhook: ${data.event}\t${data.participant.identity}`);
-  } else {
-    console.log(`webhook: ${data.event}`);
-  }
-
   switch (data.event) {
     case "participant_joined": {
       const metadata = JSON.parse(data.participant.metadata);
@@ -57,6 +51,7 @@ const livekitWebhook = async (data: WebhookEvent) => {
       await storeRoom(roomName, room);
 
       await publishState(room.name, participantType, data.participant.identity);
+
       if (participantType !== "CONTROL") {
         await publishState(room.name, "CONTROL");
       }
