@@ -21,7 +21,16 @@ const editPreset = async (params: RoomPresetRequest) => {
       loadedPreset = room.presets.find(
         (preset) => preset.index === params.index
       );
-      room.participants = loadedPreset.participants;
+
+      // find participants currently in room but not in setting, and merge them
+      const participantsNotInSetting = room.participants.filter(
+        (p) => loadedPreset.participants.findIndex((p1) => p1.sid === p.sid) < 0
+      );
+
+      room.participants = [
+        ...loadedPreset.participants,
+        ...participantsNotInSetting,
+      ];
       room.currentPreset = loadedPreset.name;
       break;
     }
