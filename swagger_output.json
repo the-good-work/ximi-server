@@ -5,6 +5,11 @@
     "title": "XIMI Server API",
     "description": "API documentation list for project XIMI"
   },
+  "servers": [
+    {
+      "url": "https://server.ximi.network/"
+    }
+  ],
   "tags": [
     {
       "name": "Rooms",
@@ -1131,7 +1136,7 @@
           "preset": {
             "index": 0,
             "name": "PRESET1",
-            "participant": [
+            "participants": [
               {
                 "sid": "<sid>",
                 "name": "USER1",
