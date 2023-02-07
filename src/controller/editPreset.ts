@@ -22,9 +22,21 @@ const editPreset = async (params: RoomPresetRequest) => {
         (preset) => preset.index === params.index
       );
 
+      // copy sid of all PERFORMER nodes in case of exit/reenter
+      loadedPreset.participants = [
+        ...loadedPreset.participants.map((p) => {
+          const pRoom = room.participants?.find((pR) => pR.name === p.name);
+          if (pRoom) {
+            return { ...p, sid: pRoom.sid };
+          }
+          return p;
+        }),
+      ];
+
       // find participants currently in room but not in setting, and merge them
       const participantsNotInSetting = room.participants.filter(
-        (p) => loadedPreset.participants.findIndex((p1) => p1.sid === p.sid) < 0
+        (p) =>
+          loadedPreset.participants.findIndex((p1) => p1.name === p.name) < 0
       );
 
       room.participants = [
@@ -45,15 +57,27 @@ const editPreset = async (params: RoomPresetRequest) => {
 
       // const oldPresets = [...room.presets];
       room.presets = [...params.presets];
+
       room.currentPreset =
         params.presets[currentPresetIndex].name ||
         `SLOT${currentPresetIndex + 1}`;
+
+      // copy sid of all PERFORMER nodes in case of exit/reenter
+      room.presets[currentPresetIndex].participants = [
+        ...room.presets[currentPresetIndex].participants.map((p) => {
+          const pRoom = room.participants?.find((pR) => pR.name === p.name);
+          if (pRoom) {
+            return { ...p, sid: pRoom.sid };
+          }
+          return p;
+        }),
+      ];
 
       // find participants currently in room but not in setting, and merge them
       const participantsNotInSetting = room.participants.filter(
         (p) =>
           room.presets[currentPresetIndex].participants.findIndex(
-            (p1) => p1.sid === p.sid
+            (p1) => p1.name === p.name
           ) < 0
       );
 
