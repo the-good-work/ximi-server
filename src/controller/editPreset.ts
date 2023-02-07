@@ -31,14 +31,45 @@ const editPreset = async (params: RoomPresetRequest) => {
         ...loadedPreset.participants,
         ...participantsNotInSetting,
       ];
+
       room.currentPreset = loadedPreset.name;
+      break;
+    }
+
+    case "LOAD_PRESET_FILE": {
+      // find active preset index before replacing presets
+      const currentPresetIndex = room.presets.findIndex(
+        (p, i) =>
+          p.name === room.currentPreset || `SLOT${i + 1}` === room.currentPreset
+      );
+
+      // const oldPresets = [...room.presets];
+      room.presets = [...params.presets];
+      room.currentPreset =
+        params.presets[currentPresetIndex].name ||
+        `SLOT${currentPresetIndex + 1}`;
+
+      // find participants currently in room but not in setting, and merge them
+      const participantsNotInSetting = room.participants.filter(
+        (p) =>
+          room.presets[currentPresetIndex].participants.findIndex(
+            (p1) => p1.sid === p.sid
+          ) < 0
+      );
+
+      room.participants = [
+        ...room.presets[currentPresetIndex].participants,
+        ...participantsNotInSetting,
+      ];
+
       break;
     }
   }
 
   await storeRoom(params.room_name, room);
   await publishState(room.name, "CONTROL");
-  if (params.type === "LOAD_PRESET") {
+
+  if (params.type === "LOAD_PRESET" || params.type === "LOAD_PRESET_FILE") {
     await Promise.all(
       room.participants
         .filter((p) => p.type === "PERFORMER")
