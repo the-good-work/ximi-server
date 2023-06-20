@@ -1,5 +1,5 @@
 import { deleteRoom, getRoom, storeRoom } from "../util/redisClient";
-import { publishState } from "../util/livekitClient";
+import { publishState, tick } from "../util/livekitClient";
 import { Participant } from "@thegoodwork/ximi-types";
 import { WebhookEvent } from "livekit-server-sdk/dist/proto/livekit_webhook";
 
@@ -75,6 +75,10 @@ const livekitWebhook = async (data: WebhookEvent) => {
       await storeRoom(roomName, room);
       break;
     }
+    case "track_published":
+    case "track_unpublished":
+      await tick(roomName);
+      break;
     case "room_finished": {
       await deleteRoom(roomName);
       break;

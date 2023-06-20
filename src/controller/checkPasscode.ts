@@ -34,8 +34,6 @@ const checkPasscode = async (params: {
     }-${uid().toUpperCase()}`;
   }
 
-  console.log(params);
-
   await storeRoom(params.room_name, room);
 
   const data = {

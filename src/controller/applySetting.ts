@@ -2,6 +2,7 @@ import { storeRoom, getRoom } from "../util/redisClient";
 import {
   Participant,
   ParticipantPerformer,
+  ParticipantScout,
   RoomUpdateAction,
 } from "@thegoodwork/ximi-types";
 import { publishState } from "../util/livekitClient";
@@ -14,7 +15,7 @@ const applySetting = async (params: RoomUpdateAction) => {
 
   const participantData = room.participants.find(
     (participant: Participant) => participant.name === params.participant
-  ) as ParticipantPerformer;
+  ) as ParticipantPerformer | ParticipantScout;
 
   switch (params.type) {
     case "MUTE_AUDIO": {
@@ -23,7 +24,7 @@ const applySetting = async (params: RoomUpdateAction) => {
     }
     case "UNMUTE_AUDIO": {
       participantData.audioMixMute = participantData.audioMixMute.filter(
-        (name) => name !== params.target
+        (name: string) => name !== params.target
       );
       break;
     }
@@ -32,8 +33,10 @@ const applySetting = async (params: RoomUpdateAction) => {
       break;
     }
     case "UPDATE_LAYOUT": {
-      participantData.video.layout = params.layout;
-      participantData.video.slots = params.slots;
+      if (participantData.type === "PERFORMER") {
+        participantData.video.layout = params.layout;
+        participantData.video.slots = params.slots;
+      }
       break;
     }
   }
@@ -42,8 +45,11 @@ const applySetting = async (params: RoomUpdateAction) => {
 
   await publishState(room.name, "CONTROL");
 
-  if (participantData.type === "PERFORMER") {
-    await publishState(room.name, "PERFORMER", params.participant);
+  if (
+    participantData.type === "PERFORMER" ||
+    participantData.type === "SCOUT"
+  ) {
+    await publishState(room.name, participantData.type, params.participant);
 
     const outputs = room.participants.filter(
       (p) => p.type === "OUTPUT" && p.target === params.participant

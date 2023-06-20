@@ -182,3 +182,10 @@ export async function publishState(
     targetSid
   );
 }
+
+export async function tick(roomName: string) {
+  const encoder = new TextEncoder();
+  const updatePayload = { type: "tick" };
+  const payload = encoder.encode(JSON.stringify(updatePayload));
+  roomServiceClient.sendData(roomName, payload, DataPacket_Kind.RELIABLE);
+}

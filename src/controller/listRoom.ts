@@ -4,7 +4,6 @@ const listRoom = async () => {
   const allRooms = await getAllRooms();
   const data = allRooms.map((room: any) => {
     let count = 0;
-    console.log(room.participants);
     room.participants.forEach((participant: any) => {
       if (participant.type === "PERFORMER" || participant.type === "SCOUT") {
         count++;
