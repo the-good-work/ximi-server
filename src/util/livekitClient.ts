@@ -12,7 +12,10 @@ import {
   ParticipantPerformer,
 } from "@thegoodwork/ximi-types";
 import { getRoom } from "./redisClient";
-import { ServerUpdate } from "@thegoodwork/ximi-types/src/room";
+import {
+  ParticipantScout,
+  ServerUpdate,
+} from "@thegoodwork/ximi-types/src/room";
 
 config();
 
@@ -70,7 +73,7 @@ export async function generateToken(data: {
       roomJoin: true,
     };
     metadata = { type: data.type, target: data.performer_target };
-  } else if (data.type === "PERFORMER") {
+  } else if (data.type === "PERFORMER" || data.type === "SCOUT") {
     tokenPermission = {
       roomJoin: true,
     };
@@ -100,7 +103,7 @@ export async function publishState(
   const room = await getRoom(roomName);
 
   const targetSid: string[] = [];
-  let updatePayload: ServerUpdate;
+  let updatePayload: ServerUpdate = undefined;
 
   switch (type) {
     // publish to all CONTROL
@@ -129,7 +132,18 @@ export async function publishState(
           (participant: Participant) => participant.name === participantName
         ) as ParticipantPerformer,
       };
-      if (updatePayload) targetSid.push(updatePayload.update.sid);
+      targetSid.push(updatePayload.update.sid);
+      break;
+    }
+
+    case "SCOUT": {
+      updatePayload = {
+        type: "scout-update",
+        update: room.participants.find(
+          (participant: Participant) => participant.name === participantName
+        ) as ParticipantScout,
+      };
+      targetSid.push(updatePayload.update.sid);
       break;
     }
     // publish to relevant OUTPUT only

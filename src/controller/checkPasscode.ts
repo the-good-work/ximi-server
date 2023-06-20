@@ -34,6 +34,8 @@ const checkPasscode = async (params: {
     }-${uid().toUpperCase()}`;
   }
 
+  console.log(params);
+
   await storeRoom(params.room_name, room);
 
   const data = {
@@ -42,6 +44,7 @@ const checkPasscode = async (params: {
     identity: params.participant_name,
     performer_target: params.performer_target,
   };
+
   const token = await generateToken(data);
 
   return token;

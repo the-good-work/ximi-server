@@ -38,6 +38,15 @@ const livekitWebhook = async (data: WebhookEvent) => {
             layout: "Default",
           },
         };
+      } else if (participantType === "SCOUT") {
+        participantData = {
+          sid: data.participant.sid,
+          name: data.participant.identity,
+          type: participantType,
+          audioMixMute: [],
+          audioOutDelay: 0,
+          textPoster: "hello",
+        };
       } else if (participantType === "OUTPUT") {
         const outputTargetName = metadata.target;
         participantData = {
