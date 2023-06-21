@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@thegoodwork/ximi-types": "github:the-good-work/ximi-types#ca51758006cb2fd640a4af6fa675b0438dfdb728",
+    "@thegoodwork/ximi-types": "github:the-good-work/ximi-types#c9e2cd5dc4e468287274892fcbfdcec9700c5cd8",
     "@typescript-eslint/parser": ">=5.0.0 <6.0.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",

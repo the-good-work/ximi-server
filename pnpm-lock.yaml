@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@thegoodwork/ximi-types':
-    specifier: github:the-good-work/ximi-types#ca51758006cb2fd640a4af6fa675b0438dfdb728
-    version: github.com/the-good-work/ximi-types/ca51758006cb2fd640a4af6fa675b0438dfdb728
+    specifier: github:the-good-work/ximi-types#c9e2cd5dc4e468287274892fcbfdcec9700c5cd8
+    version: github.com/the-good-work/ximi-types/c9e2cd5dc4e468287274892fcbfdcec9700c5cd8
   '@typescript-eslint/parser':
     specifier: '>=5.0.0 <6.0.0'
     version: 5.37.0(eslint@8.23.1)(typescript@4.8.3)
@@ -2504,8 +2504,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  github.com/the-good-work/ximi-types/ca51758006cb2fd640a4af6fa675b0438dfdb728:
-    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/ca51758006cb2fd640a4af6fa675b0438dfdb728}
+  github.com/the-good-work/ximi-types/c9e2cd5dc4e468287274892fcbfdcec9700c5cd8:
+    resolution: {tarball: https://codeload.github.com/the-good-work/ximi-types/tar.gz/c9e2cd5dc4e468287274892fcbfdcec9700c5cd8}
     name: '@thegoodwork/ximi-types'
-    version: 1.0.4
+    version: 1.0.5
     dev: false

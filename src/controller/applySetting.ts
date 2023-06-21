@@ -39,6 +39,13 @@ const applySetting = async (params: RoomUpdateAction) => {
       }
       break;
     }
+
+    case "UPDATE_POSTER_TEXT": {
+      if (participantData.type === "SCOUT") {
+        participantData.textPoster = params.text;
+        break;
+      }
+    }
   }
 
   await storeRoom(params.room_name, room);

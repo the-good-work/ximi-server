@@ -10,6 +10,8 @@ const editPreset = async (params: RoomPresetRequest) => {
 
   let loadedPreset: Preset;
 
+  console.log(params);
+
   switch (params.type) {
     case "SAVE_PRESET": {
       room.presets[params.preset.index] = params.preset;
@@ -96,9 +98,8 @@ const editPreset = async (params: RoomPresetRequest) => {
   if (params.type === "LOAD_PRESET" || params.type === "LOAD_PRESET_FILE") {
     await Promise.all(
       room.participants
-        .filter((p) => p.type === "PERFORMER")
-        .map((p) => p.name)
-        .map((name) => publishState(room.name, "PERFORMER", name))
+        .filter((p) => p.type === "PERFORMER" || p.type === "SCOUT")
+        .map((p) => publishState(room.name, p.type, p.name))
     );
   }
 
