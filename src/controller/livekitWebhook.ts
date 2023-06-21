@@ -45,7 +45,7 @@ const livekitWebhook = async (data: WebhookEvent) => {
           type: participantType,
           audioMixMute: [],
           audioOutDelay: 0,
-          textPoster: "hello",
+          textPoster: "",
         };
       } else if (participantType === "OUTPUT") {
         const outputTargetName = metadata.target;
