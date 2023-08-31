@@ -5,6 +5,7 @@ services:
   caddy:
     image: livekit/caddyl4
     command: run --config /etc/caddy.yaml --adapter yaml
+    restart: on-failure
     network_mode: "host"
     volumes:
       - "./caddy.yaml:/etc/caddy.yaml"
@@ -24,7 +25,7 @@ services:
     volumes:
       - "./redis.conf:/etc/redis.conf"
   ximi-server:
-    image: ximi-server:latest
+    image: ximi-server:scout-4
     network_mode: "host"
     env_file:
       - .env

@@ -1,6 +1,7 @@
 FROM node:16
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm install -g pnpm
+# RUN curl -f https://get.pnpm.io/v8.6.js | node - add --global pnpm
 
 # Files required by pnpm install
 COPY  package.json pnpm-lock.yaml  ./
